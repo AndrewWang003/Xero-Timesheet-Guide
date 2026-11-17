@@ -213,4 +213,6 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Enlarged view shows the whole screenshot, with marks; more covered on the originals | Planned on 16 Nov but not built; the reader matches the guide against the whole screen. |
 | 18 Nov 2026 | Page swipe hint on touch screens, first step page of a visit; computers keep only the strip hint | Readers on phones did not know the page swipes. The pointer demo waits for the hint. |
 | 18 Nov 2026 | On wide screens a tall picture is at most 460 px high (D2) | D2 filled the screen. |
+| 18 Nov 2026 | Strip hint on computers only; page swipe hint uses a thumb | On a phone two hints were too much; the thumb is how people swipe and differs from the click hand. |
+| 18 Nov 2026 | Fixed: a swipe during the hint did nothing and the hint stayed on screen | The touch landed on the neighbour page, which the hint then removed; the hint's fade was held by an inline value. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |
