@@ -149,11 +149,12 @@ ul.pts li.num::before{content:attr(data-n);left:0;top:.08em;width:22px;height:22
 .ph .load{position:absolute}
 .ld-cap{font-family:var(--f-display);font-weight:800;font-size:min(13px,11cqh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .ld-code{font-family:var(--f-mono);font-weight:600;color:var(--ink)}
-/* A: skeleton of a screen */
+/* A: skeleton of a screen. The bars keep growing and shrinking one after another, and a light sweeps across: still loading. */
 .ld-a{position:absolute;inset:0;padding:6% 7%;display:flex;flex-direction:column;justify-content:center;gap:min(12px,9cqh)}
-.ld-a i{display:block;height:min(14px,10cqh);border-radius:6px;background:var(--line)}
-.ld-a i:nth-child(1){width:55%} .ld-a i:nth-child(2){width:88%} .ld-a i:nth-child(3){width:72%} .ld-a i:nth-child(4){width:38%;background:var(--amber-soft)}
-.ld-a::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,var(--surface) 50%,transparent 70%);opacity:.7;transform:translateX(-100%);animation:sheen 1.8s ease-in-out infinite}
+.ld-a i{display:block;height:min(14px,10cqh);border-radius:6px;background:var(--line);transform-origin:left center;animation:bar 1.6s ease-in-out infinite}
+.ld-a i:nth-child(1){width:55%} .ld-a i:nth-child(2){width:88%;animation-delay:.2s} .ld-a i:nth-child(3){width:72%;animation-delay:.4s} .ld-a i:nth-child(4){width:38%;background:var(--amber-soft);animation-delay:.6s}
+@keyframes bar{0%,100%{transform:scaleX(.55);opacity:.55}50%{transform:scaleX(1);opacity:1}}
+.ld-a::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,var(--surface) 50%,transparent 70%);opacity:.6;transform:translateX(-100%);animation:sheen 1.8s ease-in-out infinite}
 @keyframes sheen{to{transform:translateX(100%)}}
 /* B: flat clip-art of a browser window with a picture in it */
 .ld-b{display:flex;flex-direction:column;align-items:center;gap:min(8px,5cqh);height:100%;justify-content:center}
@@ -311,8 +312,8 @@ const CFG = {
   // Earnings rate for kilometres. No number in the name.
   kmRate: 'Manual: Less Than 5000km (No PAYGW)',
   login: 'login.xero.com',
-  // Look of the picture placeholder: 'A' screen skeleton, 'B' window clip-art, 'C' step code and dots.
-  placeholder: 'B'
+  // Look of the picture placeholder: 'A' moving screen skeleton (chosen by the owner), 'B' window clip-art, 'C' step code and dots.
+  placeholder: 'A'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
 /* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/A3.svg":[800,500],"img/B1.jpg":[1600,755],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B3.webp":[1600,822],"img/B3n.webp":[920,830],"img/C1.jpg":[1600,695],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,358],"img/C2n.webp":[920,854],"img/D1.jpg":[1600,768],"img/D1n.webp":[920,978],"img/D2.jpg":[832,860],"img/D3.jpg":[1240,270],"img/D3n.webp":[920,361],"img/E1.jpg":[1140,630],"img/E1n.webp":[920,385],"img/E2.jpg":[1240,585],"img/E2n.webp":[920,279]};/* SIZES:end */

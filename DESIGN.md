@@ -112,7 +112,7 @@ All content is data near the top of the script in `index.html`:
 
 | Name | What it holds |
 |---|---|
-| `CFG` | Values that change: the hourly earnings rate name, the kilometre rate name, the login address, the placeholder look (`'A'`, `'B'` or `'C'`). |
+| `CFG` | Values that change: the hourly earnings rate name, the kilometre rate name, the login address, the placeholder look (`'A'`, chosen by the owner; `'B'` and `'C'` are kept as options). |
 | `SIZES` | The pixel size of every picture in `img/`, so its space is kept before it downloads. Written by `tools/apply_marks.py`. |
 | `STAGES` | Stage letters and names. |
 | `STEPS` | One object per step (below). |
@@ -167,7 +167,6 @@ Not decided. Do not "fix" them by guessing.
 2. **A2** says "use the same name as on your new employee form". Not confirmed that this form is still used.
 3. **B1** assumes a new worker lands on the Xero Me page right after logging in. Not checked with a new account.
 4. **A1 to A3** pictures are stand-ins.
-5. **Placeholder look.** `CFG.placeholder` is `'B'` (window drawing) until the owner picks A, B or C.
 
 ## 10. Decisions
 
@@ -190,3 +189,5 @@ Not decided. Do not "fix" them by guessing.
 | 17 Nov 2026 | No browser storage; choices last for the visit | Shared rule. |
 | 17 Nov 2026 | Placeholders keep each picture's final height | Text jumped down when pictures arrived. |
 | 17 Nov 2026 | `Play` 44 px high; 320 px minimum width | Shared rules. |
+| 17 Nov 2026 | Placeholder look A: moving screen skeleton | Chosen by the owner from three options; the moving bars show that the picture is loading. |
+| 17 Nov 2026 | Commits are authored by the owner, with Claude as co-author | The owner is the author of the guide. |
