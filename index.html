@@ -264,6 +264,15 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
 .zcap{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--navy);color:var(--white);border:1.5px solid var(--amber);border-radius:999px;
   padding:8px 16px 6px;font-family:var(--f-display);font-weight:800;font-size:15px;white-space:nowrap}
 
+/* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
+.phint{position:fixed;left:0;top:0;width:0;height:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .25s}
+.phint.on{opacity:1}
+.phint .phand{position:absolute;left:-13px;top:-3px;width:40px;height:50px}
+.phint .phand svg{width:100%;height:100%;display:block;overflow:visible;transition:transform .18s;transform-origin:32% 5%}
+.phint.press .phand svg{transform:scale(.85)}
+.phint .phcap{position:absolute;left:0;top:-54px;transform:translateX(-50%);white-space:nowrap;background:var(--brand);color:var(--brand-ink);
+  border-radius:999px;padding:8px 14px 6px;font-family:var(--f-display);font-weight:800;font-size:15px}
+
 /* new page slides in from the side it came from */
 #view.inR{animation:inR .22s ease-out}
 #view.inL{animation:inL .22s ease-out}
@@ -276,6 +285,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   main > *,.peek > *{width:100%;max-width:600px;margin-inline:auto}
   main > .card.wide,.peek > .card.wide{max-width:none;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:26px;row-gap:14px;align-items:start}
   .card.wide .fig{grid-column:1;grid-row:1 / 3}
+  .card.wide .fig .shot{max-width:calc(var(--ar, 9) * 460px + 30px);margin-inline:auto}   /* tall pictures (D2) stay at most 460 px high */
   .card.wide .head{grid-column:2;grid-row:1}
   .card.wide .rest{grid-column:2;grid-row:2}
 }
@@ -620,6 +630,7 @@ function hintStrip(){
   const base = strip.scrollLeft;
   const dist = Math.max(40, Math.min(140, max - base));  // finger and strip move the same distance
   const CYCLE = 1800, TIMES = 2;
+  stripHintEnd = performance.now() + CYCLE * TIMES;
   const ease = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
   // value that goes from a to b between p0 and p1 (eased), flat outside
   const seg = (p, p0, p1, a, b) => p <= p0 ? a : p >= p1 ? b : a + (b - a) * ease((p - p0) / (p1 - p0));
@@ -686,7 +697,7 @@ function startView(){
 function stepView(s){
   const st = STAGES[s.g];
   const pts = (s.pts||[]).map(p => typeof p === 'string' ? `<li>${p}</li>` : p.no ? `<li class="no">${p.h}</li>` : `<li class="num" data-n="${p.n}">${p.h}</li>`).join('');
-  const fig = s.shot ? `<div class="fig"><button class="shot${gutters(s.shot)}" type="button" data-zoom="${s.id}" aria-label="Show screenshot ${s.id} larger">${shotHTML(s.shot, s.id)}</button><p class="cap">${s.anim ? `<button class="play" type="button" data-play disabled><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="pb" cx="12" cy="12" r="12"/><path class="pi" d="M9.5 6.8 L17.6 12 L9.5 17.2 Z"/></svg><span>Play</span></button>` : ''}${pick(s.shot).ex ? `<span class="tag">${esc(pick(s.shot).ex)}</span>` : ''}<span class="tap">${s.shot.fsrc ? 'Tap to see the full screen' : 'Tap to enlarge'}</span></p></div>` : '';
+  const fig = s.shot ? `<div class="fig"${SIZES[s.shot.src] ? ` style="--ar:${(SIZES[s.shot.src][0] / SIZES[s.shot.src][1]).toFixed(3)}"` : ''}><button class="shot${gutters(s.shot)}" type="button" data-zoom="${s.id}" aria-label="Show screenshot ${s.id} larger">${shotHTML(s.shot, s.id)}</button><p class="cap">${s.anim ? `<button class="play" type="button" data-play disabled><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="pb" cx="12" cy="12" r="12"/><path class="pi" d="M9.5 6.8 L17.6 12 L9.5 17.2 Z"/></svg><span>Play</span></button>` : ''}${pick(s.shot).ex ? `<span class="tag">${esc(pick(s.shot).ex)}</span>` : ''}<span class="tap">${s.shot.fsrc ? 'Tap to see the full screen' : 'Tap to enlarge'}</span></p></div>` : '';
   return `<section class="card${s.shot ? ' wide' : ''}">
     <div class="head">
       <span class="stage"><em>${s.id}</em>${esc(st.name)}</span>
@@ -772,13 +783,61 @@ function whenPicReady(pic, fn){
 }
 /* Play stays switched off until the picture is ready. auto = also start the demo by itself (first visit to the step).
    The demo also plays when the device asks for reduced motion: the pointer only moves a short way inside the picture. */
+function autoPlay(){ if (phT || phRaf) { demoT.push(setTimeout(autoPlay, 300)); return; } playDemo(); }   // after the page hint
 function armDemo(auto){
   const pic = $('#view .pic'), btn = $('#view [data-play]');
   whenPicReady(pic, () => {
     if (btn) btn.disabled = false;
-    if (auto) demoT.push(setTimeout(playDemo, 400));
+    if (auto) demoT.push(setTimeout(autoPlay, 400));
   });
 }
+
+/* ---------- page swipe hint: touch screens only, the first step page opened in a visit.
+   A hand drags the page sideways, the next page comes in beside it, then the page springs back.
+   It waits for the strip hint to finish, the pointer demo waits for it, and any touch stops it. ---------- */
+const TOUCH = matchMedia('(pointer: coarse)').matches;
+let pageHintDone = false, phT = 0, phRaf = 0, stripHintEnd = 0;
+const PH = document.createElement('div'); PH.className = 'phint'; PH.setAttribute('aria-hidden', 'true');
+PH.innerHTML = '<span class="phcap">Swipe to change step</span><span class="phand"><svg viewBox="0 0 44 54"><g class="co"><rect x="6" y="0" width="16" height="34" rx="8"/><rect x="19" y="13" width="12" height="20" rx="6"/><rect x="26" y="15" width="12" height="20" rx="6"/><rect x="32" y="18" width="12" height="20" rx="6"/><rect x="6" y="22" width="38" height="32" rx="12"/><rect x="0" y="24" width="13" height="22" rx="6.5"/></g><g class="cf"><rect x="8" y="2" width="12" height="30" rx="6"/><rect x="21" y="15" width="8" height="16" rx="4"/><rect x="28" y="17" width="8" height="16" rx="4"/><rect x="34" y="20" width="8" height="16" rx="4"/><rect x="8" y="24" width="34" height="28" rx="10"/><rect x="2" y="26" width="9" height="18" rx="4.5"/></g><g class="cl"><rect x="20.2" y="18" width="1.6" height="13" rx=".8"/><rect x="27.2" y="20" width="1.6" height="12" rx=".8"/><rect x="33.2" y="23" width="1.6" height="11" rx=".8"/></g></svg></span>';
+document.body.appendChild(PH);
+function stopPageHint(){
+  clearTimeout(phT); cancelAnimationFrame(phRaf); phT = phRaf = 0;
+  PH.classList.remove('on', 'press');
+  if (sw && sw.hint) {
+    sw = null; view.style.transition = peek.style.transition = 'none'; view.style.transform = '';
+    peek.hidden = true; peek.innerHTML = ''; peek.style.transform = '';
+  }
+}
+function pageHint(){
+  pageHintDone = true;
+  const start = () => {
+    phT = 0;
+    const left = stripHintEnd - performance.now();
+    if (left > 0) { phT = setTimeout(start, left + 300); return; }   // one animation at a time
+    const {prev, next} = neighbours(current), dir = next ? -1 : prev ? 1 : 0;
+    if (!dir) return;
+    sw = {drag:true, hint:true, dir:0, to:null}; swPeek(dir);
+    const W = view.offsetWidth, D = dir * Math.min(W * .42, 170), x0 = innerWidth * (dir < 0 ? .7 : .3), y = innerHeight * .58;
+    const ease = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
+    const seg = (p, a, b) => p <= a ? 0 : p >= b ? 1 : ease((p - a) / (b - a));
+    const DUR = 2800; let t0 = 0;
+    PH.classList.add('on');
+    const frame = now => {
+      if (!t0) t0 = now;
+      const p = (now - t0) / DUR;
+      if (p >= 1) { stopPageHint(); return; }
+      const dx = D * (seg(p, .2, .6) - seg(p, .72, .92));          // drag, hold, spring back
+      PH.classList.toggle('press', p > .14 && p < .7);
+      PH.style.opacity = p < .1 ? p / .1 : p > .9 ? (1 - p) / .1 : 1;
+      PH.style.transform = `translate(${x0 + dx}px,${y}px)`;
+      swMove(dx, false);
+      phRaf = requestAnimationFrame(frame);
+    };
+    phRaf = requestAnimationFrame(frame);
+  };
+  phT = setTimeout(start, 600);
+}
+window.addEventListener('touchstart', () => { if (phT || phRaf) stopPageHint(); }, {capture:true, passive:true});
 
 /* ---------- routing (#start, #A1, #help ...) ---------- */
 let current = null, started = false;
@@ -801,6 +860,8 @@ function render(id, quiet, keep){   // keep = stay at the same scroll height (af
     v.classList.add(ORDER.indexOf(id) > ORDER.indexOf(was) ? 'inR' : 'inL');
   }
   watchPics($('#view')); started = true;
+  stopPageHint();
+  if (s && TOUCH && !pageHintDone) pageHint();   // before the demo, which waits for it
   if (s && s.anim) armDemo(fresh);           // Play switches on when the picture is ready; plays by itself on the first visit only
   if (!keep) window.scrollTo(0,0);   // Next / Previous / strip: start at the top of the new page
   const h = $('#view h1'); if (h) h.focus({preventScroll:true});

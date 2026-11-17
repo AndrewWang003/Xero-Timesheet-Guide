@@ -69,6 +69,8 @@ So a step has up to three pictures: `nsrc` (phone close-up), `src` (wide screens
 enlarged view). The marks are on all three. (Found 18 Nov 2026: the enlarged view showed the wide cut, not the
 whole screen as planned. The whole screen lets the reader see where the part sits on their own screen.)
 
+On wide screens a tall picture (D2) is shown at most 460 px high, so it does not fill the screen.
+
 The gap between close-up pieces is transparent in the image file and takes the colour of the number gutter, so the
 pieces read as separate tiles in both modes. (Rejected: a navy gap. It read as black in day mode.)
 
@@ -209,4 +211,6 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Click lands on the middle of a tight box; A2 mark 3 split into tick box and Create | The finger pressed Cancel. |
 | 18 Nov 2026 | Fixed: the enlarged picture stayed on its placeholder for ever | The viewer never told the placeholder that the picture had arrived (bug from 17 Nov). Check the enlarged view too when pictures change. |
 | 18 Nov 2026 | Enlarged view shows the whole screenshot, with marks; more covered on the originals | Planned on 16 Nov but not built; the reader matches the guide against the whole screen. |
+| 18 Nov 2026 | Page swipe hint on touch screens, first step page of a visit; computers keep only the strip hint | Readers on phones did not know the page swipes. The pointer demo waits for the hint. |
+| 18 Nov 2026 | On wide screens a tall picture is at most 460 px high (D2) | D2 filled the screen. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |
