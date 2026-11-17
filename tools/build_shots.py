@@ -6,13 +6,14 @@
 For each step this makes:
   img/<step>.jpg  (or .webp)  the full screenshot: wide screens, and the enlarged view on every screen
   img/<step>n.webp            a close-up for phones, made of one or more pieces cut from the same screenshot
+  img/<step>f.webp            the whole screenshot(s), for the enlarged view
 and writes tools/shots.json with the mark positions, in % of each picture.
 
 The original screenshots are NOT in this repository: they show names, pay rates and hours.
 Every redaction below is applied to the original before anything is cut from it.
 Coordinates are pixels in the original screenshot. To find them, open the original in any image viewer.
 
-Not built here (kept by hand in img/ and in index.html): A1, A2, A3, and D2 (the owner's own redaction).
+Not built here (kept by hand in img/ and in index.html): A1, A2, A3.
 Needs: Python 3 and Pillow with WebP support.
 """
 import sys, os
@@ -28,6 +29,20 @@ def load(n):
 # ---- redactions on the sources, before any crop ----
 d=ImageDraw.Draw(load('C2.jpeg'))
 for y in (470,575,678,782): d.rectangle([534,y-30,1010,y+30],fill='#C9CED6')      # other earnings rates: keep the first word (same width as "Manual:"), hide the rest
+# The full screenshots are shown too (the enlarged view), so everything private on the whole screen is covered here.
+GREY=(85,85,85)
+def cover(f, *boxes, fill=GREY):
+    d=ImageDraw.Draw(load(f))
+    for b in boxes: d.rectangle(b, fill=fill)
+def avatar(f, x0, y0, y1):      # the account initials, top right: painted over in the colour of the bar around them
+    im=load(f); cover(f, (x0, y0, im.size[0], y1), fill=im.getpixel((x0-130, (y0+y1)//2)))
+for f in ('B1&B2.png','B3.png','D2.png','E1.png'): avatar(f, 2462, 0, 121)
+for f in ('B4-1.png','B4-2.png'): avatar(f, 2455, 0, 113)
+avatar('C2.jpeg', 2648, 0, 108); avatar('D3.JPG', 1476, 74, 127)
+cover('E1.png', (2105, 978, 2215, 1025))               # this fortnight's hours
+cover('B3.png', (2105, 978, 2215, 1025))               # the same, behind the window
+cover('D2.png', (1990, 705, 2170, 775), (1895, 1035, 2060, 1230))   # totals and hours behind the window
+cover('D2.png', (957, 1247, 1192, 1279))               # approver list: one bar lengthened so only two letters show
 SEP=30   # gap between the pieces of one picture, in output pixels. It is left transparent: the page colours it.
 def build(name, strips, marks, outw):
     parts=[]; offs=[]; y=0
@@ -62,6 +77,13 @@ def step(code, wide, wmarks, narrow=None, nmarks=None, ww=1600):
     wn=f"{code}.{'webp' if len(wide)>1 else 'jpg'}"
     R[code]={'src':'img/'+wn,'marks':build(wn,wide,wmarks,ww)}
     if narrow: R[code].update(nsrc=f'img/{code}n.webp', nmarks=build(f'{code}n.webp',narrow,nmarks,920))
+    # full screen (enlarged view): every original screenshot this step uses, whole, with the same marks
+    files=[]
+    for f,_ in wide:
+        if f not in files: files.append(f)
+    full=[(f,(0,0)+load(f).size) for f in files]
+    fm=[dict(m, s=files.index(wide[m['s']][0])) for m in wmarks]
+    R[code].update(fsrc=f'img/{code}f.webp', fmarks=build(f'{code}f.webp', full, fm, min(2048, max(load(f).size[0] for f in files))))
 org=(180,15,770,100); add=(2005,708,2235,780)
 step('B1',[('B1&B2.png',(0,0,2290,1080))],[M(0,org,1),M(0,add,2,act='click')],
      [('B1&B2.png',(0,0,920,215)),('B1&B2.png',(1330,690,2250,800)),('B1&B2.png',(340,690,1260,1062))],[M(0,org,1),M(1,add,2,act='click')])
@@ -79,7 +101,7 @@ ti=(165,500,960,556); sub=(1893,1430,2142,1522)
 step('D1',[('D1.png',(150,480,2350,1536))],[M(0,ti,1),M(0,(215,1026,2060,1190),2,act='edit'),M(0,sub,3,act='click')],
      [('D1.png',(150,490,1110,570)),('D1.png',(190,880,1150,1200)),('D1.png',(1110,880,2070,1280)),('D1.png',(1390,1410,2350,1536))],
      [M(0,ti,1),M(1,(215,1026,1132,1190),2,act='edit'),M(2,(1138,1026,2060,1190),g=2,act='edit'),M(3,sub,3,act='click')])
-# D2 is not rebuilt here: it uses the owner's own redaction (see img/D2.jpg)
+step('D2',[('D2.png',(880,555,1712,1415))],[M(0,(915,758,1674,810),1,act='click')],ww=832)   # the owner's redaction, plus the one bar above
 gm=(172,408,1392,476); stt=(178,568,362,642)
 step('D3',[('D3.JPG',(160,395,1400,665))],[M(0,gm,1),M(0,stt,2)],
      [('D3.JPG',(160,400,860,482)),('D3.JPG',(160,490,860,660))],[M(0,gm,1),M(1,stt,2)],ww=1240)

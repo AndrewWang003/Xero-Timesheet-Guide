@@ -62,8 +62,12 @@ pictures change at **900 px**:
 | | Narrower than 900 px | 900 px and wider |
 |---|---|---|
 | Layout | One column, picture on top | Two columns, picture left, text right |
-| Picture | Close-up: only the parts the step is about, stacked | The full screenshot |
-| Tap on the picture | Opens the full screenshot | Opens the full screenshot |
+| Picture | Close-up: only the parts the step is about, stacked | A wider cut of the screenshot |
+| Tap on the picture | Opens the whole screenshot (the full screen) | Opens the whole screenshot (the full screen) |
+
+So a step has up to three pictures: `nsrc` (phone close-up), `src` (wide screens), `fsrc` (the whole screen, for the
+enlarged view). The marks are on all three. (Found 18 Nov 2026: the enlarged view showed the wide cut, not the
+whole screen as planned. The whole screen lets the reader see where the part sits on their own screen.)
 
 The gap between close-up pieces is transparent in the image file and takes the colour of the number gutter, so the
 pieces read as separate tiles in both modes. (Rejected: a navy gap. It read as black in day mode.)
@@ -84,9 +88,14 @@ moves right to left and the picture follows, the marks pinch and the picture zoo
 
 ### 4.5 Redaction in this guide
 
-- Approver list (D2): the owner's own redaction; one bar extended by hand so at most two letters show.
+Everything is covered on the original, so the close-up, the wide cut and the whole screen are all safe.
+
+- The account initials at the top right: painted over in the colour of the bar around them.
+- Approver list (D2): the owner's own redaction; one bar lengthened so at most two letters show.
 - Other workers' earnings rates (C1): the amount is covered, and the name beyond the width of the word "Manual:".
-- E1 is cropped so the hours column is not in the picture.
+- This fortnight's hours (E1, and behind the B2 window), and the totals and hours behind the D2 window: grey blocks.
+- Left visible on purpose, for the owner to review: the example hours and kilometres (C2, D1, D3, E2), the
+  fortnightly totals in B3, the iPad status bar and address in D3 and E2, "Next Payment Date".
 
 ## 5. The pointer demo
 
@@ -151,8 +160,8 @@ python3 tools/apply_marks.py
   positions. Never type mark coordinates by hand for the steps it builds.
 - `apply_marks.py` writes the mark positions and the size of every picture in `img/` into `index.html`.
   Run it after any picture is added or replaced, also the ones kept by hand.
-- Not built by the script: A1 and A2 (examples, labelled "Example"), A3 (a drawing, labelled "Drawn example"),
-  and D2 (the owner's redaction). The owner will replace A1 to A3 with real screenshots.
+- Not built by the script: A1 and A2 (examples, labelled "Example") and A3 (a drawing, labelled "Drawn example").
+  The owner will replace them with real screenshots.
 
 ## 8. Common changes
 
@@ -199,4 +208,5 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Pointer is amber in day mode too | Navy looked black in day mode. |
 | 18 Nov 2026 | Click lands on the middle of a tight box; A2 mark 3 split into tick box and Create | The finger pressed Cancel. |
 | 18 Nov 2026 | Fixed: the enlarged picture stayed on its placeholder for ever | The viewer never told the placeholder that the picture had arrived (bug from 17 Nov). Check the enlarged view too when pictures change. |
+| 18 Nov 2026 | Enlarged view shows the whole screenshot, with marks; more covered on the originals | Planned on 16 Nov but not built; the reader matches the guide against the whole screen. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |

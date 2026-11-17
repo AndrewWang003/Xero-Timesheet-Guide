@@ -317,7 +317,7 @@ const CFG = {
   placeholder: 'A'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
-/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/A3.svg":[800,500],"img/B1.jpg":[1600,755],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B3.webp":[1600,822],"img/B3n.webp":[920,830],"img/C1.jpg":[1600,695],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,358],"img/C2n.webp":[920,854],"img/D1.jpg":[1600,768],"img/D1n.webp":[920,978],"img/D2.jpg":[832,860],"img/D3.jpg":[1240,270],"img/D3n.webp":[920,361],"img/E1.jpg":[1140,630],"img/E1n.webp":[920,385],"img/E2.jpg":[1240,585],"img/E2n.webp":[920,279]};/* SIZES:end */
+/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/A3.svg":[800,500],"img/B1.jpg":[1600,755],"img/B1f.webp":[2048,1229],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2048,1229],"img/B3.webp":[1600,822],"img/B3f.webp":[2048,2488],"img/B3n.webp":[920,830],"img/C1.jpg":[1600,695],"img/C1f.webp":[2048,1143],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,358],"img/C2f.webp":[2048,1229],"img/C2n.webp":[920,854],"img/D1.jpg":[1600,768],"img/D1f.webp":[2048,1229],"img/D1n.webp":[920,978],"img/D2.jpg":[832,860],"img/D2f.webp":[2048,1229],"img/D3.jpg":[1240,270],"img/D3f.webp":[1567,1080],"img/D3n.webp":[920,361],"img/E1.jpg":[1140,630],"img/E1f.webp":[2048,1229],"img/E1n.webp":[920,385],"img/E2.jpg":[1240,585],"img/E2f.webp":[1567,1080],"img/E2n.webp":[920,279]};/* SIZES:end */
 const rate = t => `<span class="rate">${t}</span>`;
 const AR = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2 L10 7 L5 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const AL = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 L4 7 L9 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -334,9 +334,10 @@ const FIRST_TIME = 0;   // index of the stage that returning people skip
 
 /* Each step: id, g (stage index), t (title), shot, pts. Optional: lead, box, todo.
    Write a lead only when it says something the title and points do not.
-   shot.src + shot.marks  = the full screenshot: wide screens, and the enlarged view on every screen.
+   shot.src + shot.marks  = the picture on wide screens (and the enlarged view when there is no fsrc).
    shot.nsrc + shot.nmarks = optional close-up for narrow screens (phones), cut from the same screenshot
                              so the text is readable without zooming. Built by a script from the originals.
+   shot.fsrc + shot.fmarks = optional whole screenshot(s) for the enlarged view. Built by the same script.
    marks: x, y, w, h in % of that picture. n = number badge (leave out for a box with no number). no = coral.
           g = belongs to mark number g but has no badge of its own.
           act = what the demo shows there: 'click' = hand that taps, 'edit' = hand (type or change here),
@@ -374,7 +375,8 @@ const STEPS = [
   {id:'B1', g:1, t:'Log in and add a timesheet', anim:true,
     lead:`Log in at ${rate(CFG.login)}.`,
     shot:{src:'img/B1.jpg', what:"Xero Me page: the organisation name at the top, and the Add Timesheet button", marks:[{x:7.9,y:1.4,w:25.8,h:7.9,n:1},{x:87.6,y:65.5,w:10.0,h:6.7,n:2,act:"click"}],
-      nsrc:'img/B1n.webp', nmarks:[{x:19.6,y:2.0,w:64.1,h:11.2,n:1},{x:73.4,y:34.7,w:25.0,h:9.5,n:2,act:"click"}]},
+      nsrc:'img/B1n.webp', nmarks:[{x:19.6,y:2.0,w:64.1,h:11.2,n:1},{x:73.4,y:34.7,w:25.0,h:9.5,n:2,act:"click"}],
+      fsrc:'img/B1f.webp', fmarks:[{x:7.0,y:1.0,w:23.0,h:5.5,n:1},{x:78.3,y:46.1,w:9.0,h:4.7,n:2,act:"click"}]},
     pts:[
       {n:1, h:'<b>Check the name at the top:</b> Matrix Traffic and Transport Data. If it shows another business, click it and choose Matrix.'},
       '<b>The page says Xero Me.</b> That is right. This is the website, not the phone app.',
@@ -383,7 +385,8 @@ const STEPS = [
     ]},
   {id:'B2', g:1, t:'Choose the fortnight', anim:true,
     lead:'One timesheet covers two weeks.',
-    shot:{src:'img/B2.jpg', what:"Add Timesheet window with the Period menu open", marks:[{x:7.2,y:36.4,w:69.8,h:9.3,n:1,act:"click"},{x:7.2,y:61.2,w:29.7,h:8.6,n:2,act:"click"},{x:61.2,y:81.7,w:16.9,h:14.7,n:3,act:"click"}]},
+    shot:{src:'img/B2.jpg', what:"Add Timesheet window with the Period menu open", marks:[{x:7.2,y:36.4,w:69.8,h:9.3,n:1,act:"click"},{x:7.2,y:61.2,w:29.7,h:8.6,n:2,act:"click"},{x:61.2,y:81.7,w:16.9,h:14.7,n:3,act:"click"}],
+      fsrc:'img/B2f.webp', fmarks:[{x:34.7,y:45.4,w:25.9,h:3.4,n:1,act:"click"},{x:34.7,y:54.4,w:11.0,h:3.1,n:2,act:"click"},{x:54.7,y:61.8,w:6.2,h:5.3,n:3,act:"click"}]},
     pts:[
       {n:1, h:'<b>Period:</b> choose the fortnight that has your work days. Fortnight ending 13 Dec covers 30 Nov to 13 Dec.'},
       {n:2, h:'<b>Choose Total hours worked.</b>'},
@@ -392,7 +395,8 @@ const STEPS = [
   {id:'B3', g:1, t:'Go to the week you worked', anim:true,
     lead:'The timesheet shows one week at a time. It opens on week 1.',
     shot:{src:'img/B3.webp', what:"Top: week 1. Bottom: week 2, after clicking the arrow", marks:[{x:75.8,y:15.4,w:2.9,h:5.7,n:1,act:"click"},{x:44.2,y:88.7,w:35.3,h:9.7,n:2}],
-      nsrc:'img/B3n.webp', nmarks:[{x:84.8,y:9.6,w:6.1,h:6.7,n:1,act:"click"},{x:19.6,y:86.7,w:72.8,h:11.4,n:2}]},
+      nsrc:'img/B3n.webp', nmarks:[{x:84.8,y:9.6,w:6.1,h:6.7,n:1,act:"click"},{x:19.6,y:86.7,w:72.8,h:11.4,n:2}],
+      fsrc:'img/B3f.webp', fmarks:[{x:69.5,y:22.2,w:2.2,h:1.8,n:1,act:"click"},{x:46.1,y:79.5,w:26.2,h:3.1,n:2}]},
     pts:[
       {n:1, h:'<b>Click the arrow</b> next to Week ending to switch between week 1 and week 2.'},
       {n:2, h:'<b>Check the dates</b> under Mon to Sun. They must be the days you worked.'}
@@ -400,7 +404,8 @@ const STEPS = [
 
   {id:'C1', g:2, t:'Enter your hours', anim:true,
     shot:{src:'img/C1.jpg', what:"Earnings rate menu, open, and the boxes for each day", marks:[{x:2.9,y:49.2,w:40.6,h:10.9,n:1,act:"click"},{x:44.3,y:71.4,w:36.9,h:8.1,n:2,act:"edit"}],
-      nsrc:'img/C1n.webp', nmarks:[{x:3.3,y:42.0,w:90.4,h:9.4,n:1,act:"click"},{x:3.0,y:84.1,w:82.2,h:7.0,n:2,act:"edit"}]},
+      nsrc:'img/C1n.webp', nmarks:[{x:3.3,y:42.0,w:90.4,h:9.4,n:1,act:"click"},{x:3.0,y:84.1,w:82.2,h:7.0,n:2,act:"edit"}],
+      fsrc:'img/C1f.webp', fmarks:[{x:15.6,y:54.6,w:30.2,h:6.3,n:1,act:"click"},{x:46.4,y:67.5,w:27.5,h:4.7,n:2,act:"edit"}]},
     pts:[
       {n:1, h:`<b>Click the Earnings Rate box and choose ${rate(CFG.hourRate)}.</b> The number changes every year.`},
       {n:2, h:'<b>Type your hours</b> under each day you worked, as a decimal number.'},
@@ -412,7 +417,8 @@ const STEPS = [
   {id:'C2', g:2, t:'Add your kilometres', anim:true,
     lead:'One line holds one earnings rate. Kilometres need their own line.',
     shot:{src:'img/C2.jpg', what:"Two lines: hours and kilometres, with a kilometre number above 24", marks:[{x:2.5,y:72.4,w:13.9,h:17.3,n:1,act:"click"},{x:2.5,y:53.1,w:41.9,h:16.3,n:2,act:"click"},{x:44.7,y:53.1,w:37.0,h:16.3,n:3,act:"edit",side:"r"}],
-      nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:36.5,w:31.8,h:9.5,n:1,act:"click"},{x:2.6,y:25.8,w:95.5,h:9.0,n:2,act:"click"},{x:2.9,y:77.6,w:84.4,h:9.0,n:3,act:"edit"}]},
+      nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:36.5,w:31.8,h:9.5,n:1,act:"click"},{x:2.6,y:25.8,w:95.5,h:9.0,n:2,act:"click"},{x:2.9,y:77.6,w:84.4,h:9.0,n:3,act:"edit"}],
+      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.4,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"}]},
     pts:[
       {n:1, h:'<b>Use the empty second line.</b> No empty line? Click + Add another line.'},
       {n:2, h:`<b>Choose ${rate(CFG.kmRate)}.</b>`},
@@ -423,21 +429,24 @@ const STEPS = [
 
   {id:'D1', g:3, t:'Check, then submit', anim:true,
     shot:{src:'img/D1.jpg', what:"Finished timesheet with hours, kilometres and the Submit button", marks:[{x:0.7,y:1.9,w:36.1,h:5.3,n:1},{x:3.0,y:51.7,w:83.9,h:15.5,n:2,act:"edit"},{x:79.2,y:90.0,w:11.3,h:8.7,n:3,act:"click"}],
-      nsrc:'img/D1n.webp', nmarks:[{x:1.6,y:1.0,w:82.8,h:5.5,n:1},{x:2.6,y:25.2,w:95.5,h:16.1,n:2,act:"edit"},{x:2.9,y:59.7,w:96.0,h:16.1,g:2,act:"edit"},{x:52.4,y:89.6,w:25.9,h:9.0,n:3,act:"click"}]},
+      nsrc:'img/D1n.webp', nmarks:[{x:1.6,y:1.0,w:82.8,h:5.5,n:1},{x:2.6,y:25.2,w:95.5,h:16.1,n:2,act:"edit"},{x:2.9,y:59.7,w:96.0,h:16.1,g:2,act:"edit"},{x:52.4,y:89.6,w:25.9,h:9.0,n:3,act:"click"}],
+      fsrc:'img/D1f.webp', fmarks:[{x:6.4,y:32.5,w:31.1,h:3.6,n:1},{x:8.4,y:66.8,w:72.1,h:10.7,n:2,act:"edit"},{x:73.9,y:93.1,w:9.7,h:6.0,n:3,act:"click"}]},
     pts:[
       {n:1, h:'<b>The fortnight ending date</b> is right.'},
       {n:2, h:'<b>Hours and kilometres</b> are right for each day. Use the arrow to check both weeks.'},
       {n:3, h:'<b>Click Submit.</b>'}
     ]},
   {id:'D2', g:3, t:'Choose who approves it', anim:true,
-    shot:{src:'img/D2.jpg', what:"Submit timesheet window with the approver list open (names hidden)", marks:[{x:4.2,y:23.6,w:91.2,h:6.0,n:1,act:"click"}]},
+    shot:{src:'img/D2.jpg', what:"Submit timesheet window with the approver list open (names hidden)", marks:[{x:4.2,y:23.6,w:91.2,h:6.0,n:1,act:"click"}],
+      fsrc:'img/D2f.webp', fmarks:[{x:35.7,y:49.3,w:29.6,h:3.4,n:1,act:"click"}]},
     pts:[
       {n:1, h:'<b>Choose your supervisor:</b> the person who emailed you the job details, or the person they named.'},
       '<b>The list closes</b> after you choose. Then click <b>Submit</b> in this window.'
     ]},
   {id:'D3', g:3, t:'Look for the green message', anim:true,
     shot:{src:'img/D3.jpg', what:"Green message: timesheet submitted. Status: Requested", marks:[{x:1.0,y:4.8,w:98.4,h:25.2,n:1},{x:1.5,y:64.1,w:14.8,h:27.4,n:2}],
-      nsrc:'img/D3n.webp', nmarks:[{x:1.7,y:2.9,w:97.9,h:24.8,n:1},{x:2.6,y:66.6,w:26.3,h:26.9,n:2}]},
+      nsrc:'img/D3n.webp', nmarks:[{x:1.7,y:2.9,w:97.9,h:24.8,n:1},{x:2.6,y:66.6,w:26.3,h:26.9,n:2}],
+      fsrc:'img/D3f.webp', fmarks:[{x:11.0,y:37.8,w:77.9,h:6.3,n:1},{x:11.4,y:52.6,w:11.7,h:6.9,n:2}]},
     pts:[
       {n:1, h:'<b>Green message:</b> your timesheet was sent.'},
       {n:2, h:'<b>Status says Requested.</b> It is waiting for approval.'},
@@ -447,7 +456,8 @@ const STEPS = [
 
   {id:'E1', g:4, t:'Check the status', anim:true,
     shot:{src:'img/E1.jpg', what:"Overview with the timesheet status", marks:[{x:0.7,y:1.9,w:10.7,h:10.8,n:1,act:"click"},{x:47.0,y:84.4,w:18.9,h:9.5,n:2}],
-      nsrc:'img/E1n.webp', nmarks:[{x:0.9,y:1.8,w:13.3,h:17.7,n:1,act:"click"},{x:58.3,y:75.8,w:23.5,h:15.6,n:2}]},
+      nsrc:'img/E1n.webp', nmarks:[{x:0.9,y:1.8,w:13.3,h:17.7,n:1,act:"click"},{x:58.3,y:75.8,w:23.5,h:15.6,n:2}],
+      fsrc:'img/E1f.webp', fmarks:[{x:13.6,y:29.4,w:4.8,h:4.4,n:1,act:"click"},{x:34.2,y:63.3,w:8.4,h:3.9,n:2}]},
     pts:[
       {n:1, h:'<b>Click Overview.</b>'},
       {n:2, h:'<b>Read the status</b> of your timesheet.'},
@@ -457,7 +467,8 @@ const STEPS = [
     ]},
   {id:'E2', g:4, t:'Fix a mistake', anim:true,
     shot:{src:'img/E2.jpg', what:"Submitted timesheet with the Revert to Draft button", marks:[{x:79.8,y:87.9,w:11.6,h:10.3,n:1,act:"click"}],
-      nsrc:'img/E2n.webp', nmarks:[{x:64.3,y:66.7,w:20.6,h:28.3,n:1,act:"click"}]},
+      nsrc:'img/E2n.webp', nmarks:[{x:64.3,y:66.7,w:20.6,h:28.3,n:1,act:"click"}],
+      fsrc:'img/E2f.webp', fmarks:[{x:73.4,y:93.0,w:9.2,h:5.6,n:1,act:"click"}]},
     pts:[
       {n:1, h:'<b>Open the timesheet</b> and click Revert to Draft.'},
       '<b>Fix it,</b> then submit again.',
@@ -492,7 +503,8 @@ const order = () => skipA ? ORDER.filter(id => !A_IDS.includes(id)) : ORDER;
 
 const NARROW = matchMedia('(max-width: 899px)');
 // full = true asks for the full screenshot (enlarged view). Otherwise narrow screens get the close-up, if there is one.
-const pick = (s, full) => (!full && NARROW.matches && s.nsrc) ? {src:s.nsrc, marks:s.nmarks || [], close:true, ex:s.ex}
+const pick = (s, full) => (full && s.fsrc) ? {src:s.fsrc, marks:s.fmarks || [], ex:s.ex}
+  : (!full && NARROW.matches && s.nsrc) ? {src:s.nsrc, marks:s.nmarks || [], close:true, ex:s.ex}
   : {src:s.src, marks:s.marks || [], ex:s.ex};
 function loadArt(code){
   const k = CFG.placeholder;
@@ -674,7 +686,7 @@ function startView(){
 function stepView(s){
   const st = STAGES[s.g];
   const pts = (s.pts||[]).map(p => typeof p === 'string' ? `<li>${p}</li>` : p.no ? `<li class="no">${p.h}</li>` : `<li class="num" data-n="${p.n}">${p.h}</li>`).join('');
-  const fig = s.shot ? `<div class="fig"><button class="shot${gutters(s.shot)}" type="button" data-zoom="${s.id}" aria-label="Show screenshot ${s.id} larger">${shotHTML(s.shot, s.id)}</button><p class="cap">${s.anim ? `<button class="play" type="button" data-play disabled><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="pb" cx="12" cy="12" r="12"/><path class="pi" d="M9.5 6.8 L17.6 12 L9.5 17.2 Z"/></svg><span>Play</span></button>` : ''}${pick(s.shot).ex ? `<span class="tag">${esc(pick(s.shot).ex)}</span>` : ''}<span class="tap">${pick(s.shot).close ? 'Tap to see the full screen' : 'Tap to enlarge'}</span></p></div>` : '';
+  const fig = s.shot ? `<div class="fig"><button class="shot${gutters(s.shot)}" type="button" data-zoom="${s.id}" aria-label="Show screenshot ${s.id} larger">${shotHTML(s.shot, s.id)}</button><p class="cap">${s.anim ? `<button class="play" type="button" data-play disabled><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="pb" cx="12" cy="12" r="12"/><path class="pi" d="M9.5 6.8 L17.6 12 L9.5 17.2 Z"/></svg><span>Play</span></button>` : ''}${pick(s.shot).ex ? `<span class="tag">${esc(pick(s.shot).ex)}</span>` : ''}<span class="tap">${s.shot.fsrc ? 'Tap to see the full screen' : 'Tap to enlarge'}</span></p></div>` : '';
   return `<section class="card${s.shot ? ' wide' : ''}">
     <div class="head">
       <span class="stage"><em>${s.id}</em>${esc(st.name)}</span>
