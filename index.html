@@ -942,6 +942,7 @@ function openZoom(id){
   Z.el = zin.firstElementChild;
   zin.appendChild($('#zhint'));
   $('#zoom').hidden = false; document.body.style.overflow = 'hidden'; $('#zclose').focus();
+  watchPics(zin);   // swaps the placeholder for the picture once it has downloaded (was missing: stuck on "loading")
   const img = Z.el.querySelector('img'), ready = () => { zFit(); showZHint(); };
   if (!img || img.complete) ready(); else img.addEventListener('load', ready, {once:true});
 }
