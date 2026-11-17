@@ -198,4 +198,4 @@ Not decided. Do not "fix" them by guessing.
 | 17 Nov 2026 | Commits are authored by the owner, with Claude as co-author | The owner is the author of the guide. |
 | 18 Nov 2026 | Pointer is amber in day mode too | Navy looked black in day mode. |
 | 18 Nov 2026 | Click lands on the middle of a tight box; A2 mark 3 split into tick box and Create | The finger pressed Cancel. |
-| 18 Nov 2026 | One way into Help: a `Help` button (lifebuoy and the word, amber outline) at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. |
+| 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |

@@ -60,13 +60,10 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;d
 .theme,.helpbtn{height:44px;flex:none;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center}
 .theme{width:44px}
 .theme svg{width:22px;height:22px}
-.helpbtn{display:flex;align-items:center;gap:7px;padding:0 15px 0 11px;border:2px solid var(--amber);color:var(--ink);
+.helpbtn{display:flex;align-items:center;padding:0 18px;border:2px solid var(--amber);color:var(--ink);
   font-family:var(--f-display);font-weight:800;font-size:16px;line-height:1}
-.helpbtn svg{width:20px;height:20px;flex:none}
-.helpbtn .lb1{fill:none;stroke:var(--amber);stroke-width:4.5} .helpbtn .lb2{fill:none;stroke:var(--ink);stroke-width:4.5;stroke-dasharray:6.3 9.4;stroke-dashoffset:3.1}
 .helpbtn span{padding-top:2px}
 .helpbtn[aria-current="page"]{background:var(--brand);color:var(--brand-ink)}       /* on the Help page */
-.helpbtn[aria-current="page"] .lb1{stroke:var(--brand-ink)} .helpbtn[aria-current="page"] .lb2{stroke:var(--brand)}
 
 /* step strip: swipe sideways, tap any step to jump */
 .strip{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 34px 4px 2px;
@@ -289,7 +286,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   <header>
     <div class="bar">
       <div class="where"><b>Xero Timesheet Guide</b><span id="count"></span></div>
-      <button class="helpbtn" id="helpBtn" type="button" aria-label="Help: common problems"><svg viewBox="0 0 20 20" aria-hidden="true"><circle class="lb1" cx="10" cy="10" r="6.25"/><circle class="lb2" cx="10" cy="10" r="6.25"/></svg><span>Help</span></button>
+      <button class="helpbtn" id="helpBtn" type="button" aria-label="Help: common problems"><span>Help</span></button>
       <button class="theme" id="themeBtn" type="button"></button>
     </div>
     <div class="stripwrap">
