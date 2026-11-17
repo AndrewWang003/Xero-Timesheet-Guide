@@ -32,8 +32,10 @@ Start page, 13 steps in 5 stages, Help page.
 - The Start page asks "Used Xero for Matrix before?" with two buttons. A swipe left (or the right arrow key) on
   Start counts as "No, first time" and opens A1: that path shows every step, so nobody misses anything. Returning
   users tap `Yes`. The page swipe hint plays on Start.
-- On a phone the question is below the screen. While its buttons are less than half on screen, an amber `Next` bar
-  sits at the bottom; a tap scrolls to the question, and the bar goes away once the buttons are on screen.
+- **Scroll arrow (touch screens, every page).** While a page goes on more than 80 px below the screen, a round
+  arrow floats at the bottom: translucent `--surface`, amber ring, down chevron. A tap scrolls down 70% of a screen;
+  on Start it scrolls to the "Used Xero for Matrix before?" question, and it goes away once those buttons are on
+  screen. It goes away at the bottom of a page. Not on computers.
 - People who used Xero for Matrix before skip stage A: `Next`, `Previous` and "x of y" leave it out, and the stage
   is dimmed in the strip (still tappable). Opening any stage A step turns skipping off. The choice lasts for this
   visit only.
@@ -219,4 +221,5 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Strip hint on computers only; page swipe hint uses a thumb | On a phone two hints were too much; the thumb is how people swipe and differs from the click hand. |
 | 18 Nov 2026 | Fixed: a swipe during the hint did nothing and the hint stayed on screen | The touch landed on the neighbour page, which the hint then removed; the hint's fade was held by an inline value. |
 | 18 Nov 2026 | Swipe on Start = "first time" (A1); swipe hint plays on Start; `Next` bar on Start while the question is off screen | The owner wants the swipe taught on the first page. A1 is the safe path. On the owner's phone the question was just below the screen. (Rejected: putting the question first, readers would skip the three rules.) |
+| 18 Nov 2026 | Round scroll arrow on every page that runs past the screen (touch only), in place of the `Next` bar on Start; the swipe hint is a thumb on its own | Owner's choice: an arrow alone is enough, and every long page needs it. Half a hand looked frightening. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |

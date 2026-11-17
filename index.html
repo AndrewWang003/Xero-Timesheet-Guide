@@ -198,7 +198,7 @@ ul.pts li.num::before{content:attr(data-n);left:0;top:.08em;width:22px;height:22
 .cur .eye{left:-19px;top:-13px;width:38px;height:27px}     /* eye centre sits on the target point */
 .cur svg{width:100%;height:100%;display:block;overflow:visible}
 .cur.k-look .eye,.cur.k-edit .hand,.cur.k-click .hand{display:block}
-.cur .hand svg{transition:transform .18s;transform-origin:33% 2%}
+.cur .hand svg{transition:transform .18s;transform-origin:38% 10%}
 .cur.press .hand svg{transform:scale(.84)}
 .cur i{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;border:3px solid var(--amber);opacity:0}
 .cur.press i{animation:ring .45s ease-out}
@@ -265,15 +265,17 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   padding:8px 16px 6px;font-family:var(--f-display);font-weight:800;font-size:15px;white-space:nowrap}
 
 /* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
-.sbar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));z-index:5;transform:translate(-50%,12px);opacity:0;visibility:hidden;
-  transition:opacity .2s,transform .2s,visibility 0s .2s;display:flex;align-items:center;gap:10px;min-height:48px;padding:12px 24px 10px;border:0;border-radius:999px;
-  background:var(--amber);color:var(--navy);font-family:var(--f-display);font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 0 0 3px var(--bg)}
-.sbar.on{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .2s,transform .2s}
-.sbar svg{width:14px;height:14px;transform:rotate(90deg)}
+.sbar{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));z-index:5;width:48px;height:48px;margin-left:-24px;padding:0;
+  display:grid;place-items:center;border-radius:50%;border:2px solid var(--amber);color:var(--ink);cursor:pointer;
+  background:color-mix(in srgb,var(--surface) 70%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .2s,transform .2s,visibility 0s .2s}
+.sbar.show{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .2s}
+.sbar svg{width:16px;height:16px;transform:rotate(90deg)}
+.phint .cn{fill:var(--brand-ink);opacity:.16}
 .phint{position:fixed;left:0;top:0;width:0;height:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .25s}
 .phint.on{opacity:1}
-.phint .phand{position:absolute;left:-16px;top:-1px;width:48px;height:60px;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
-.phint .phand svg{width:100%;height:100%;display:block;overflow:visible;transition:transform .18s;transform-origin:33% 2%}
+.phint .phand{position:absolute;left:-22px;top:-6px;width:58px;height:64px;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+.phint .phand svg{width:100%;height:100%;display:block;overflow:visible;transition:transform .18s;transform-origin:38% 10%}
 .phint.press .phand svg{transform:scale(.85)}
 .phint .phcap{position:absolute;left:0;top:-54px;transform:translateX(-50%);white-space:nowrap;background:var(--brand);color:var(--brand-ink);
   border-radius:999px;padding:8px 14px 6px;font-family:var(--f-display);font-weight:800;font-size:15px}
@@ -804,7 +806,7 @@ function armDemo(auto){
 const TOUCH = matchMedia('(pointer: coarse)').matches;
 let pageHintDone = false, phT = 0, phRaf = 0, stripHintEnd = 0;
 const PH = document.createElement('div'); PH.className = 'phint'; PH.setAttribute('aria-hidden', 'true');
-PH.innerHTML = '<span class="phcap">Swipe to change step</span><span class="phand"><svg viewBox="0 0 46 58"><g class="co"><rect x="4" y="0" width="22" height="42" rx="11"/><path d="M12 30 Q30 22 44 32 L46 58 L8 58 Z"/></g><g class="cf"><rect x="6" y="2" width="18" height="38" rx="9"/><path d="M14 32 Q30 25 42 34 L44 58 L10 58 Z"/></g><g class="cl"><rect x="10" y="5" width="10" height="10" rx="4.5" opacity=".6"/><rect x="11" y="30" width="10" height="1.6" rx=".8"/></g></svg></span>';
+PH.innerHTML = '<span class="phcap">Swipe to change step</span><span class="phand"><svg viewBox="-22 -4 58 64"><g transform="rotate(-16 16 58)"><path class="co" d="M16 0 C25 0 30 7 30 16 L30.5 32 C31 38 30 46 29 60 L5 60 C3.5 46 2 38 2.4 32 L2 16 C2 7 7 0 16 0Z"/><path class="cf" d="M16 2.2 C23.6 2.2 27.8 8 27.8 16 L28.3 32 C28.7 38 27.8 46 26.8 60 L7.2 60 C6 46 4.4 38 4.6 32 L4.2 16 C4.2 8 8.4 2.2 16 2.2Z"/><path class="cn" d="M16 5.5 C21.5 5.5 23.6 9 23.6 13.5 L23.4 19 C23.3 21 21.6 22.2 19.6 22.2 L12.4 22.2 C10.4 22.2 8.7 21 8.6 19 L8.4 13.5 C8.4 9 10.5 5.5 16 5.5Z"/><path class="cl" d="M9 34.2 Q16 31.6 23.6 34.2 L23.6 35.8 Q16 33.4 9 35.8Z"/></g></svg></span>';
 document.body.appendChild(PH);
 function stopPageHint(){
   clearTimeout(phT); cancelAnimationFrame(phRaf); phT = phRaf = 0;
@@ -845,21 +847,26 @@ function pageHint(){
 }
 window.addEventListener('touchstart', () => { if (phT || phRaf) stopPageHint(); }, {capture:true, passive:true});
 
-/* ---------- Start page: a bottom bar while the "Used Xero for Matrix before?" buttons are below the screen.
-   Tapping it scrolls to them; it goes away once they are on screen. ---------- */
+/* ---------- touch screens: a round down arrow while the page goes on below the screen.
+   Tap: scroll down most of a screen (on Start: to the "Used Xero for Matrix before?" question). ---------- */
 const SB = document.createElement('button'); SB.type = 'button'; SB.className = 'sbar';
-SB.setAttribute('aria-label', 'Next: used Xero for Matrix before?');
-SB.innerHTML = 'Next' + AR;
+SB.setAttribute('aria-label', 'Scroll down');
+SB.innerHTML = AR;
 document.body.appendChild(SB);
-let sbIO = null;
 function syncStartBar(){
-  if (sbIO) { sbIO.disconnect(); sbIO = null; }
+  let on = TOUCH && document.documentElement.scrollHeight - (window.scrollY + innerHeight) > 80;
   const q = current === 'start' && $('#view .ask .choices');
-  if (!q) { SB.classList.remove('on'); return; }
-  sbIO = new IntersectionObserver(([e]) => SB.classList.toggle('on', e.intersectionRatio < .5), {threshold:[0, .5, 1]});
-  sbIO.observe(q);
+  if (on && q) { const r = q.getBoundingClientRect(); if (r.top + r.height / 2 < innerHeight) on = false; }   // the choice is on screen
+  SB.classList.toggle('show', on);
 }
-SB.addEventListener('click', () => { const q = $('#view .ask'); if (q) q.scrollIntoView({behavior:'smooth', block:'center'}); });
+window.addEventListener('scroll', syncStartBar, {passive:true});
+window.addEventListener('resize', syncStartBar);
+if (document.fonts) document.fonts.ready.then(syncStartBar);
+SB.addEventListener('click', () => {
+  const q = current === 'start' && $('#view .ask');
+  if (q) q.scrollIntoView({behavior:'smooth', block:'center'});
+  else window.scrollBy({top: innerHeight * .7, behavior:'smooth'});
+});
 
 /* ---------- routing (#start, #A1, #help ...) ---------- */
 let current = null, started = false;
@@ -884,7 +891,7 @@ function render(id, quiet, keep){   // keep = stay at the same scroll height (af
   watchPics($('#view')); started = true;
   stopPageHint();
   if ((s || id === 'start') && TOUCH && !pageHintDone) pageHint();   // before the demo, which waits for it
-  syncStartBar();
+  requestAnimationFrame(syncStartBar);
   if (s && s.anim) armDemo(fresh);           // Play switches on when the picture is ready; plays by itself on the first visit only
   if (!keep) window.scrollTo(0,0);   // Next / Previous / strip: start at the top of the new page
   const h = $('#view h1'); if (h) h.focus({preventScroll:true});
