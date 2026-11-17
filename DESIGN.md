@@ -27,7 +27,7 @@ Start page, 13 steps in 5 stages, Help page.
 | C · Hours and km | C1 Enter your hours · C2 Add your kilometres |
 | D · Submit | D1 Check, then submit · D2 Choose who approves it · D3 Look for the green message |
 | E · After you submit | E1 Check the status · E2 Fix a mistake |
-| Help | Common problems. Each one opens the step that fixes it. |
+| Help | Common problems. Each one opens the step that fixes it. Opened from the `Help` button at the top right on every page, and by `Next` on E2. It is not in the step strip. |
 
 - The two buttons on the Start page are the only way forward, so nobody misses the first-time / returning choice.
   A swipe left on the Start page does nothing.
@@ -198,3 +198,4 @@ Not decided. Do not "fix" them by guessing.
 | 17 Nov 2026 | Commits are authored by the owner, with Claude as co-author | The owner is the author of the guide. |
 | 18 Nov 2026 | Pointer is amber in day mode too | Navy looked black in day mode. |
 | 18 Nov 2026 | Click lands on the middle of a tight box; A2 mark 3 split into tick box and Create | The finger pressed Cancel. |
+| 18 Nov 2026 | One way into Help: a `Help` button (lifebuoy and the word, amber outline) at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. |
