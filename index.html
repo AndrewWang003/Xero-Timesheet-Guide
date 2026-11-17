@@ -265,6 +265,11 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   padding:8px 16px 6px;font-family:var(--f-display);font-weight:800;font-size:15px;white-space:nowrap}
 
 /* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
+.sbar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));z-index:5;transform:translate(-50%,12px);opacity:0;visibility:hidden;
+  transition:opacity .2s,transform .2s,visibility 0s .2s;display:flex;align-items:center;gap:10px;min-height:48px;padding:12px 24px 10px;border:0;border-radius:999px;
+  background:var(--amber);color:var(--navy);font-family:var(--f-display);font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 0 0 3px var(--bg)}
+.sbar.on{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .2s,transform .2s}
+.sbar svg{width:14px;height:14px;transform:rotate(90deg)}
 .phint{position:fixed;left:0;top:0;width:0;height:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .25s}
 .phint.on{opacity:1}
 .phint .phand{position:absolute;left:-16px;top:-1px;width:48px;height:60px;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
@@ -686,7 +691,7 @@ function startView(){
       <li><span class="n">3</span><div><b>Submit by 11:59 pm Thursday of the week you worked.</b><span>Pay runs every two weeks. Late? Your pay may come two weeks later. Worked Friday, Saturday or Sunday? Submit as soon as you finish work.</span></div></li>
     </ul>
   </section>
-  <section class="card">
+  <section class="card ask">
     <h2>Used Xero for Matrix before?</h2>
     <div class="choices">
       <button class="choice main" type="button" data-to="A1" data-skip="0"><span><b>No, first time</b><span>Choose this too if you only use Xero for another job.</span></span>${AR}</button>
@@ -840,6 +845,22 @@ function pageHint(){
 }
 window.addEventListener('touchstart', () => { if (phT || phRaf) stopPageHint(); }, {capture:true, passive:true});
 
+/* ---------- Start page: a bottom bar while the "Used Xero for Matrix before?" buttons are below the screen.
+   Tapping it scrolls to them; it goes away once they are on screen. ---------- */
+const SB = document.createElement('button'); SB.type = 'button'; SB.className = 'sbar';
+SB.setAttribute('aria-label', 'Next: used Xero for Matrix before?');
+SB.innerHTML = 'Next' + AR;
+document.body.appendChild(SB);
+let sbIO = null;
+function syncStartBar(){
+  if (sbIO) { sbIO.disconnect(); sbIO = null; }
+  const q = current === 'start' && $('#view .ask .choices');
+  if (!q) { SB.classList.remove('on'); return; }
+  sbIO = new IntersectionObserver(([e]) => SB.classList.toggle('on', e.intersectionRatio < .5), {threshold:[0, .5, 1]});
+  sbIO.observe(q);
+}
+SB.addEventListener('click', () => { const q = $('#view .ask'); if (q) q.scrollIntoView({behavior:'smooth', block:'center'}); });
+
 /* ---------- routing (#start, #A1, #help ...) ---------- */
 let current = null, started = false;
 function render(id, quiet, keep){   // keep = stay at the same scroll height (after a swipe)
@@ -862,7 +883,8 @@ function render(id, quiet, keep){   // keep = stay at the same scroll height (af
   }
   watchPics($('#view')); started = true;
   stopPageHint();
-  if (s && TOUCH && !pageHintDone) pageHint();   // before the demo, which waits for it
+  if ((s || id === 'start') && TOUCH && !pageHintDone) pageHint();   // before the demo, which waits for it
+  syncStartBar();
   if (s && s.anim) armDemo(fresh);           // Play switches on when the picture is ready; plays by itself on the first visit only
   if (!keep) window.scrollTo(0,0);   // Next / Previous / strip: start at the top of the new page
   const h = $('#view h1'); if (h) h.focus({preventScroll:true});
@@ -898,7 +920,7 @@ function swMove(dx, anim){
 function swPeek(dir){                                     // dir -1 = finger moves left = next page
   const {prev, next} = neighbours(current);
   let to = dir < 0 ? next : prev;
-  if (current === 'start' && dir < 0) to = null;          // on Start, the choice buttons decide the path
+  if (current === 'start' && dir < 0) to = 'A1';         // on Start, a swipe means "first time" (the path with every step); returning users tap Yes
   sw.dir = dir; sw.to = to;
   if (!to) { peek.hidden = true; peek.innerHTML = ''; return; }
   peek.innerHTML = pageHTML(to); peek.hidden = false;
@@ -1072,7 +1094,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && zoomOpen) { closeZoom(); return; }
   if (zoomOpen || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
   if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-  if (current === 'start' && e.key === 'ArrowRight') return;   // on Start, the choice buttons decide the path
+  if (current === 'start' && e.key === 'ArrowRight') { e.preventDefault(); go('A1'); return; }   // same as a swipe: first time
   const {prev, next} = neighbours(current);
   const to = e.key === 'ArrowRight' ? next : prev;
   if (to) { e.preventDefault(); go(to); }

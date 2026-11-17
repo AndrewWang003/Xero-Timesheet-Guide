@@ -29,8 +29,11 @@ Start page, 13 steps in 5 stages, Help page.
 | E · After you submit | E1 Check the status · E2 Fix a mistake |
 | Help | Common problems. Each one opens the step that fixes it. Opened from the `Help` button at the top right on every page, and by `Next` on E2. It is not in the step strip. |
 
-- The two buttons on the Start page are the only way forward, so nobody misses the first-time / returning choice.
-  A swipe left on the Start page does nothing.
+- The Start page asks "Used Xero for Matrix before?" with two buttons. A swipe left (or the right arrow key) on
+  Start counts as "No, first time" and opens A1: that path shows every step, so nobody misses anything. Returning
+  users tap `Yes`. The page swipe hint plays on Start.
+- On a phone the question is below the screen. While its buttons are less than half on screen, an amber `Next` bar
+  sits at the bottom; a tap scrolls to the question, and the bar goes away once the buttons are on screen.
 - People who used Xero for Matrix before skip stage A: `Next`, `Previous` and "x of y" leave it out, and the stage
   is dimmed in the strip (still tappable). Opening any stage A step turns skipping off. The choice lasts for this
   visit only.
@@ -215,4 +218,5 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | On wide screens a tall picture is at most 460 px high (D2) | D2 filled the screen. |
 | 18 Nov 2026 | Strip hint on computers only; page swipe hint uses a thumb | On a phone two hints were too much; the thumb is how people swipe and differs from the click hand. |
 | 18 Nov 2026 | Fixed: a swipe during the hint did nothing and the hint stayed on screen | The touch landed on the neighbour page, which the hint then removed; the hint's fade was held by an inline value. |
+| 18 Nov 2026 | Swipe on Start = "first time" (A1); swipe hint plays on Start; `Next` bar on Start while the question is off screen | The owner wants the swipe taught on the first page. A1 is the safe path. On the owner's phone the question was just below the screen. (Rejected: putting the question first, readers would skip the three rules.) |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |
