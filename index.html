@@ -32,10 +32,8 @@
   --brand:#F2A93B; --brand-ink:#141B3C; --coral:#FF7A52; --sage:#7DB3AB;
   --ok-bg:#1C3537; --bad-bg:#3D2320; --tint:#1F2647; color-scheme:dark }
 
-/* demo pointer (hand / eye): navy by day, amber by night */
-:root{--cur-f:#141B3C;--cur-o:#FFFDF8;--cur-l:#33407A}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--cur-f:#F2A93B;--cur-o:#141B3C;--cur-l:#B9791C} }
-:root[data-theme="dark"]{--cur-f:#F2A93B;--cur-o:#141B3C;--cur-l:#B9791C}
+/* demo pointer (hand / eye) */
+:root{--cur-f:#F2A93B;--cur-o:#141B3C;--cur-l:#B9791C}   /* amber with a navy outline, in both modes */
 .cf{fill:var(--cur-f)} .co{fill:var(--cur-o)} .cl{fill:var(--cur-l)}
 
 *{box-sizing:border-box}
@@ -355,7 +353,7 @@ const STEPS = [
     ]},
   {id:'A2', g:0, t:'Create your account, or log in', anim:true,
     lead:'What you see depends on whether your email already has a Xero login.',
-    shot:{src:'img/A2.jpg', ex:'Example', what:'Create account form for people new to Xero', marks:[{x:3.3,y:9.7,w:54.6,h:22.6,n:1,act:"edit"},{x:3.3,y:45.5,w:54.6,h:22.1,n:2,act:"edit"},{x:3.3,y:78.6,w:54.6,h:17.9,n:3,act:"click"}]},
+    shot:{src:'img/A2.jpg', ex:'Example', what:'Create account form for people new to Xero', marks:[{x:3.3,y:9.7,w:54.6,h:22.6,n:1,act:"edit"},{x:3.3,y:45.5,w:54.6,h:22.1,n:2,act:"edit"},{x:3.6,y:79.3,w:3.9,h:4.6,n:3,act:"click"},{x:3.8,y:88.6,w:13.9,h:7.0,g:3,act:"click"}]},
     pts:[
       {n:1, h:'<b>New to Xero:</b> type your name. Use the same name as on your new employee form.'},
       {n:2, h:'<b>Password:</b> follow the rules on the page. Your email is your login name.'},
@@ -508,7 +506,7 @@ function shotHTML(s, code, full){
   const ms = v.marks;
   // Boxes sit on the screenshot. Numbers sit in a gutter beside it, level with their box,
   // so a number never covers the screenshot and a box line never crosses a number.
-  const boxes = ms.map(m => `<span class="mark${m.no?' no':''}" data-n="${m.n || m.g || ''}"${m.act ? ` data-act="${m.act}"` : ''} style="left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%"></span>`).join('');
+  const boxes = ms.map(m => `<span class="mark${m.no?' no':''}" data-n="${m.n || m.g || ''}"${m.act ? ` data-act="${m.act}"` : ''}${m.tx != null ? ` data-tx="${m.tx}" data-ty="${m.ty}"` : ''} style="left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%"></span>`).join('');
   const badges = ms.filter(m => m.n).map(m => `<b class="badge ${m.side==='r'?'r':'l'}${m.no?' no':''}" data-c="${(m.y + m.h/2).toFixed(2)}" style="top:clamp(0px, calc(${(m.y + m.h/2).toFixed(1)}% - 11px), calc(100% - 22px))">${m.n}</b>`).join('');
   return `<span class="pic${src ? '' : ' ready'}">${inner}${boxes}${badges}</span>`;
 }
@@ -714,8 +712,11 @@ function playDemo(){
   const ns = [...new Set(marks.map(m => m.dataset.n).filter(Boolean))].sort();
   if (!ns.length) return;
   // eye: on the bottom edge of the box, so it does not cover what you check. hand: finger tip inside the box.
-  const place = (bx, kind) => { const L = bx.offsetLeft, T = bx.offsetTop, W = bx.offsetWidth, H = bx.offsetHeight;
-    return kind === 'look' ? [L + W / 2, T + H + 3] : kind === 'edit' ? [L + W * .3, T + H * .7] : [L + W * (W > 140 ? .5 : .6), T + H * .6]; };
+  // eye: on the bottom edge of the box. edit: inside the box, left part. click: the middle of the box, which must be
+  // drawn tight around the button. A mark can name its own point with tx / ty (% of the picture).
+  const place = (bx, kind) => { const L = bx.offsetLeft, T = bx.offsetTop, W = bx.offsetWidth, H = bx.offsetHeight, P = bx.parentNode;
+    if (bx.dataset.tx) return [P.clientWidth * bx.dataset.tx / 100, P.clientHeight * bx.dataset.ty / 100];
+    return kind === 'look' ? [L + W / 2, T + H + 3] : kind === 'edit' ? [L + W * .3, T + H * .6] : [L + W / 2, T + H / 2]; };
   const cur = document.createElement('span'); cur.className = 'cur'; cur.innerHTML = CUR;
   cur.style.transition = 'opacity .3s';                 // first stop: fade in on mark 1, no travel
   pic.appendChild(cur);

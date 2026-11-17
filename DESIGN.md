@@ -96,13 +96,17 @@ A pointer visits mark 1, 2, 3. The visited box and its text point light up.
 |---|---|---|
 | Only check something | Eye | Sits on the bottom edge of the box, blinks, does not cover what is checked |
 | Type or change something | Hand, index finger | Inside the box, moves a little from side to side |
-| Click | Hand, index finger | Presses twice, with a ring |
+| Click | Hand, index finger | Finger tip on the middle of the button; presses twice, with a ring |
 
 - It appears on mark 1. It does not fly in from elsewhere.
 - It plays by itself the first time a step is opened in a visit. `Play` replays it.
 - It starts, and `Play` is switched on, only when the picture has downloaded and has its place on the page.
-- Navy hand in day mode, amber hand in night mode. (Rejected: a hand with the middle finger out. It must be the
-  index finger.)
+- The eye and hand are amber with a navy outline in both modes. (Rejected: a navy hand in day mode. Rejected: a
+  hand with the middle finger out. It must be the index finger.)
+- **A click mark must be drawn tight around the one button to press**, because the finger lands on the middle of the
+  box. Two things to press under one number get two boxes (the second with `g`). If the button cannot be the box,
+  give the mark `tx`, `ty`: the point to press, in % of the picture.
+  (Found 18 Nov 2026: A2 mark 3 covered the tick box, Create and Cancel, and the finger pressed Cancel.)
 - `Play` is a secondary button: amber outline and an amber play disc, not filled, so `Next` stays the one main
   button. Most readers never need `Play`.
 
@@ -131,9 +135,10 @@ A step:
   box:{c:'ok', h:'Done'}}         // optional box
 ```
 
-A mark: `{x, y, w, h, n, side, g, act}`. Position and size are in % of that picture.
+A mark: `{x, y, w, h, n, side, g, act, tx, ty}`. Position and size are in % of that picture.
 `n` is the badge number (leave out for a box with no badge). `g` joins a badge-less box to mark `g`.
 `side:'r'` puts the badge in the right gutter. `act` is `'click'`, `'edit'`, or left out for "only check".
+`tx`, `ty` (optional) is where the pointer goes, in % of the picture; without them it goes to the middle of the box.
 
 ## 7. Making the pictures
 
@@ -191,3 +196,5 @@ Not decided. Do not "fix" them by guessing.
 | 17 Nov 2026 | `Play` 44 px high; 320 px minimum width | Shared rules. |
 | 17 Nov 2026 | Placeholder look A: moving screen skeleton | Chosen by the owner from three options; the moving bars show that the picture is loading. |
 | 17 Nov 2026 | Commits are authored by the owner, with Claude as co-author | The owner is the author of the guide. |
+| 18 Nov 2026 | Pointer is amber in day mode too | Navy looked black in day mode. |
+| 18 Nov 2026 | Click lands on the middle of a tight box; A2 mark 3 split into tick box and Create | The finger pressed Cancel. |
