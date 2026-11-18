@@ -26,7 +26,7 @@ Start page, 11 steps in 4 stages, Help page.
 | B · New timesheet | B1 Log in and add a timesheet · B2 Choose the fortnight · B3 Go to the week you worked (animated) |
 | C · Hours and km | C1 Enter your hours · C2 Add your kilometres |
 | D · Submit | D1 Check, then submit · D2 Choose who approves it · D3 Look for the green message (and how to fix a mistake) · D4 Check the status |
-| Help | Common problems. Each one opens the step that fixes it. Opened from the `Help` button at the top right on every page, and by `Next` on E2. It is not in the step strip. |
+| Help | Common problems. Each one opens the step that fixes it. Opened from the `Help` button at the top right on every page, and by `Next` on D4. It is not in the step strip. |
 
 - The Start page asks "Used Xero for Matrix before?" with two buttons. A swipe left (or the right arrow key) on
   Start counts as "No, first time" and opens A1: that path shows every step, so nobody misses anything. Returning
@@ -55,7 +55,7 @@ Start page, 11 steps in 4 stages, Help page.
 ### 4.1 Real screenshots, not drawings (rejected: drawings)
 
 A simplified drawing of the Xero page was tried for B1 and rejected: readers match the guide against their own
-screen, and a drawing leaves things out. Drawings are only a stand-in where no screenshot exists yet (A3).
+screen, and a drawing leaves things out. Drawings are only a stand-in where no screenshot exists yet (none at the moment).
 Do not copy Xero's own web pages (HTML, CSS, logo) into this project.
 
 ### 4.2 Close-ups on phones
@@ -100,8 +100,8 @@ Everything is covered on the original, so the close-up, the wide cut and the who
 - Approver list (D2): the owner's own redaction; one bar lengthened so at most two letters show.
 - Other workers' earnings rates (C1): the amount is covered, and the name beyond the width of the word "Manual:".
 - This fortnight's hours (D4, and behind the B2 window), and the totals and hours behind the D2 window: grey blocks.
-- Left visible on purpose, for the owner to review: the example hours and kilometres (C2, D1, D3, E2), the
-  fortnightly totals in B3, the iPad status bar and address in D3 and E2, "Next Payment Date".
+- Left visible on purpose, for the owner to review: the example hours and kilometres (C2, D1, D3), the
+  fortnightly totals in B3, the iPad status bar and address in D3, "Next Payment Date".
 
 ## 5. The pointer demo
 
