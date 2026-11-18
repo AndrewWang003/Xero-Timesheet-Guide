@@ -52,7 +52,10 @@ button{font:inherit;color:inherit}
 button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 
 /* sticky header: top bar + step strip */
-header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line);transform:translateZ(0)}
+/* During a fast flick a phone can draw the sticky header a few pixels low for a frame, and the page showed through
+   above it. This cover fills the space above the header and the side margins with the page colour. */
+header::before{content:"";position:absolute;bottom:100%;height:120px;left:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));right:calc(-1 * max(16px, env(safe-area-inset-right, 0px)));background:var(--bg);pointer-events:none}
 .bar{display:flex;align-items:center;gap:10px;min-height:44px}
 .where{flex:1;min-width:0;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .where b,.where span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
