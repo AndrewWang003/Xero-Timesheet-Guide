@@ -52,7 +52,10 @@ button{font:inherit;color:inherit}
 button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 
 /* sticky header: top bar + step strip */
-header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line);transform:translateZ(0)}
+/* During a fast flick a phone can draw the sticky header a few pixels low for a frame, and the page showed through
+   above it. This cover fills the space above the header and the side margins with the page colour. */
+header::before{content:"";position:absolute;bottom:100%;height:120px;left:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));right:calc(-1 * max(16px, env(safe-area-inset-right, 0px)));background:var(--bg);pointer-events:none}
 .bar{display:flex;align-items:center;gap:10px;min-height:44px}
 .where{flex:1;min-width:0;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .where b,.where span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -257,14 +260,12 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
 /* the whole picture is visible when it opens. Pinch, wheel or + / - to zoom. Drag to move. */
 .zoom .zin{flex:1;position:relative;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:grab}
 .zoom .zin .shot{max-width:none;cursor:inherit;pointer-events:none;will-change:transform}
-.zhint{position:absolute;inset:0;z-index:2;pointer-events:none}
-/* finger marks: one per finger, drawn on top of the picture */
-.zd{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;opacity:0;
-  background:var(--amber-dot);border:3px solid var(--white);box-shadow:0 2px 10px var(--shade),0 0 0 7px var(--amber-ring)}
-.zcap{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--navy);color:var(--white);border:1.5px solid var(--amber);border-radius:999px;
-  padding:8px 16px 6px;font-family:var(--f-display);font-weight:800;font-size:15px;white-space:nowrap}
 
 /* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
+.pic img.after,.pic.ready img.after{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
+.pic.swapped img.after{opacity:1}
+.pic.swapped .mark[data-n="2"]{animation:chg 1s .5s 2}
+@keyframes chg{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--amber) 50%,transparent)}}
 .sbar{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));z-index:5;width:48px;height:48px;margin-left:-24px;padding:0;
   display:grid;place-items:center;border-radius:50%;border:2px solid var(--amber);color:var(--ink);cursor:pointer;
   background:color-mix(in srgb,var(--surface) 70%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
@@ -315,7 +316,6 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   </header>
   <div class="pager" id="pager"><main id="view"></main><div class="peek" id="peek" aria-hidden="true" inert hidden></div></div>
 </div>
-<div class="zhint" id="zhint" hidden><i class="zd"></i><i class="zd"></i><span class="zcap" id="zhtext"></span></div>
 <div class="zoom" id="zoom" hidden role="dialog" aria-modal="true" aria-label="Screenshot, large">
   <div class="zbar"><span id="zcode"></span><span class="zbtns"><button class="zb" id="zout" type="button" aria-label="Zoom out">&minus;</button><button class="zb" id="zplus" type="button" aria-label="Zoom in">+</button><button id="zclose" type="button">Close</button></span></div>
   <div class="zin" id="zin"></div>
@@ -334,7 +334,7 @@ const CFG = {
   placeholder: 'A'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
-/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/A3.svg":[800,500],"img/B1.jpg":[1600,755],"img/B1f.webp":[2048,1229],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2048,1229],"img/B3.webp":[1600,822],"img/B3f.webp":[2048,2488],"img/B3n.webp":[920,830],"img/C1.jpg":[1600,695],"img/C1f.webp":[2048,1143],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,358],"img/C2f.webp":[2048,1229],"img/C2n.webp":[920,854],"img/D1.jpg":[1600,768],"img/D1f.webp":[2048,1229],"img/D1n.webp":[920,978],"img/D2.jpg":[832,860],"img/D2f.webp":[2048,1229],"img/D3.jpg":[1240,270],"img/D3f.webp":[1567,1080],"img/D3n.webp":[920,361],"img/E1.jpg":[1140,630],"img/E1f.webp":[2048,1229],"img/E1n.webp":[920,385],"img/E2.jpg":[1240,585],"img/E2f.webp":[1567,1080],"img/E2n.webp":[920,279]};/* SIZES:end */
+/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2048,1229],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2048,1229],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2048,2488],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2048,1143],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2048,1229],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2048,1229],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2048,1229],"img/D3n.webp":[920,385]};/* SIZES:end */
 const rate = t => `<span class="rate">${t}</span>`;
 const AR = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2 L10 7 L5 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const AL = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 L4 7 L9 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -344,8 +344,7 @@ const STAGES = [
   {k:'A', name:'First time only'},
   {k:'B', name:'New timesheet'},
   {k:'C', name:'Hours and km'},
-  {k:'D', name:'Submit'},
-  {k:'E', name:'After you submit'}
+  {k:'D', name:'Submit'}
 ];
 const FIRST_TIME = 0;   // index of the stage that returning people skip
 
@@ -368,55 +367,46 @@ const STEPS = [
     shot:{src:'img/A1.jpg', ex:'Example', what:'Invite email from Xero with the Set up my employee file button', marks:[{x:29.6,y:79.4,w:42.8,h:12.2,n:1,act:"click"}]},
     pts:[
       '<b>Find the email</b> from Xero: "Welcome to Matrix Traffic and Transport Data". Check junk or spam too.',
-      {n:1, h:'<b>Click Set up my employee file.</b> Xero opens in your browser.'},
-      '<b>Have these ready:</b> Tax File Number, super fund and member number, bank BSB and account number.',
-      '<b>No email, or the date has passed?</b> Ask your supervisor to send a new invite.'
+      {n:1, h:'<b>Click Set up my employee file.</b>'},
+      '<b>No email, or the date has passed?</b> Ask your supervisor for a new invite.'
     ]},
-  {id:'A2', g:0, t:'Create your account, or log in', anim:true,
-    lead:'What you see depends on whether your email already has a Xero login.',
+  {id:'A2', g:0, t:'Set up your account', anim:true,
     shot:{src:'img/A2.jpg', ex:'Example', what:'Create account form for people new to Xero', marks:[{x:3.3,y:9.7,w:54.6,h:22.6,n:1,act:"edit"},{x:3.3,y:45.5,w:54.6,h:22.1,n:2,act:"edit"},{x:3.6,y:79.3,w:3.9,h:4.6,n:3,act:"click"},{x:3.8,y:88.6,w:13.9,h:7.0,g:3,act:"click"}]},
     pts:[
-      {n:1, h:'<b>New to Xero:</b> type your name. Use the same name as on your new employee form.'},
-      {n:2, h:'<b>Password:</b> follow the rules on the page. Your email is your login name.'},
+      {n:1, h:'<b>Type your name,</b> the same as on your new employee form.'},
+      {n:2, h:'<b>Choose a password.</b> Your email is your login name.'},
       {n:3, h:'<b>Tick the box,</b> then click <b>Create</b>.'},
-      '<b>Already use Xero for another job?</b> You see a login page instead. Log in with your usual email and password.'
-    ]},
-  {id:'A3', g:0, t:'Fill in your employee details',
-    lead:'Xero then asks for the details Matrix needs to pay you.',
-    shot:{src:'img/A3.svg', ex:'Drawn example', what:'Employee file form with four steps: personal, tax, super, bank', marks:[]},
-    pts:[
-      '<b>Fill in each step:</b> personal, tax, super, bank. Submit at the end.',
-      `<b>Next time,</b> log in at ${rate(CFG.login)}. Save it as a bookmark.`
+      '<b>Already use Xero for another job?</b> You see a login page instead. Log in with your usual email and password.',
+      '<b>Then fill in</b> personal, tax, super and bank details, and click Submit. Have ready: Tax File Number, super member number, BSB and account number.'
     ]},
 
   {id:'B1', g:1, t:'Log in and add a timesheet', anim:true,
-    lead:`Log in at ${rate(CFG.login)}.`,
+    lead:`Log in at ${rate(CFG.login)}. Save it as a bookmark.`,
     shot:{src:'img/B1.jpg', what:"Xero Me page: the organisation name at the top, and the Add Timesheet button", marks:[{x:7.9,y:1.4,w:25.8,h:7.9,n:1},{x:87.6,y:65.5,w:10.0,h:6.7,n:2,act:"click"}],
       nsrc:'img/B1n.webp', nmarks:[{x:19.6,y:2.0,w:64.1,h:11.2,n:1},{x:73.4,y:34.7,w:25.0,h:9.5,n:2,act:"click"}],
       fsrc:'img/B1f.webp', fmarks:[{x:7.0,y:1.0,w:23.0,h:5.5,n:1},{x:78.3,y:46.1,w:9.0,h:4.7,n:2,act:"click"}]},
     pts:[
-      {n:1, h:'<b>Check the name at the top:</b> Matrix Traffic and Transport Data. If it shows another business, click it and choose Matrix.'},
-      '<b>The page says Xero Me.</b> That is right. This is the website, not the phone app.',
+      {n:1, h:'<b>Check the name at the top:</b> Matrix Traffic and Transport Data. Another business? Click it and choose Matrix.'},
+      '<b>The page says Xero Me.</b> That is right: it is the website, not the app.',
       {n:2, h:'<b>Click Add Timesheet.</b>'},
-      '<b>Your fortnight is already in the list as Draft?</b> Click it to open it. Do not add a new one.'
+      '<b>Your fortnight is already listed as Draft?</b> Open it. Do not add a new one.'
     ]},
   {id:'B2', g:1, t:'Choose the fortnight', anim:true,
-    lead:'One timesheet covers two weeks.',
     shot:{src:'img/B2.jpg', what:"Add Timesheet window with the Period menu open", marks:[{x:7.2,y:36.4,w:69.8,h:9.3,n:1,act:"click"},{x:7.2,y:61.2,w:29.7,h:8.6,n:2,act:"click"},{x:61.2,y:81.7,w:16.9,h:14.7,n:3,act:"click"}],
       fsrc:'img/B2f.webp', fmarks:[{x:34.7,y:45.4,w:25.9,h:3.4,n:1,act:"click"},{x:34.7,y:54.4,w:11.0,h:3.1,n:2,act:"click"},{x:54.7,y:61.8,w:6.2,h:5.3,n:3,act:"click"}]},
     pts:[
-      {n:1, h:'<b>Period:</b> choose the fortnight that has your work days. Fortnight ending 13 Dec covers 30 Nov to 13 Dec.'},
+      {n:1, h:'<b>Period:</b> the fortnight with your work days. Fortnight ending 13 Dec covers 30 Nov to 13 Dec.'},
       {n:2, h:'<b>Choose Total hours worked.</b>'},
       {n:3, h:'<b>Click Continue.</b>'}
     ]},
   {id:'B3', g:1, t:'Go to the week you worked', anim:true,
-    lead:'The timesheet shows one week at a time. It opens on week 1.',
-    shot:{src:'img/B3.webp', what:"Top: week 1. Bottom: week 2, after clicking the arrow", marks:[{x:75.8,y:15.4,w:2.9,h:5.7,n:1,act:"click"},{x:44.2,y:88.7,w:35.3,h:9.7,n:2}],
-      nsrc:'img/B3n.webp', nmarks:[{x:84.8,y:9.6,w:6.1,h:6.7,n:1,act:"click"},{x:19.6,y:86.7,w:72.8,h:11.4,n:2}],
-      fsrc:'img/B3f.webp', fmarks:[{x:69.5,y:22.2,w:2.2,h:1.8,n:1,act:"click"},{x:46.1,y:79.5,w:26.2,h:3.1,n:2}]},
+    after:{src:'img/B3-2.jpg', nsrc:'img/B3n-2.webp'},   // the demo clicks the arrow, then this week 2 picture fades in
+    shot:{src:'img/B3.jpg', what:"Timesheet on week 1, with the arrow next to Week ending", marks:[{x:75.8,y:31.9,w:2.9,h:11.9,n:1,act:"click"},{x:60.5,y:34.0,w:14.9,h:13.2,n:2},{x:44.2,y:76.6,w:35.3,h:20.2,g:2}],
+      nsrc:'img/B3n.webp', nmarks:[{x:84.8,y:20.0,w:6.1,h:14.0,n:1,act:"click"},{x:53.3,y:22.5,w:30.9,h:15.5,n:2},{x:19.6,y:72.5,w:72.8,h:23.8,g:2}],
+      fsrc:'img/B3f.webp', fmarks:[{x:69.5,y:22.2,w:2.2,h:1.8,n:1,act:"click"},{x:58.2,y:73.1,w:11.1,h:2.0,n:2},{x:46.1,y:79.5,w:26.2,h:3.1,g:2}]},
     pts:[
-      {n:1, h:'<b>Click the arrow</b> next to Week ending to switch between week 1 and week 2.'},
-      {n:2, h:'<b>Check the dates</b> under Mon to Sun. They must be the days you worked.'}
+      {n:1, h:'It opens on week 1. <b>Click the arrow</b> next to Week ending for week 2.'},
+      {n:2, h:'<b>Week ending and the dates change.</b> Check they are the days you worked.'}
     ]},
 
   {id:'C1', g:2, t:'Enter your hours', anim:true,
@@ -425,79 +415,59 @@ const STEPS = [
       fsrc:'img/C1f.webp', fmarks:[{x:15.6,y:54.6,w:30.2,h:6.3,n:1,act:"click"},{x:46.4,y:67.5,w:27.5,h:4.7,n:2,act:"edit"}]},
     pts:[
       {n:1, h:`<b>Click the Earnings Rate box and choose ${rate(CFG.hourRate)}.</b> The number changes every year.`},
-      {n:2, h:'<b>Type your hours</b> under each day you worked, as a decimal number.'},
-      '<b>Minutes ÷ 60, to 2 decimals.</b> 7 hours 30 minutes = 7.5. 7 hours 20 minutes = 7.33.',
+      {n:2, h:'<b>Type your hours</b> for each day as a decimal (minutes ÷ 60): 7 hours 30 minutes = 7.5, 7 hours 20 minutes = 7.33.'},
       '<b>Count</b> from when work starts to when it really ends. 10-minute breaks count.',
-      {no:1, h:'<b>Do not count</b> the time between your morning work and your afternoon work, or your own drive to the work site.'},
-      {no:1, h:'<b>Cannot find the rate?</b> Do not choose a different one. Ask your supervisor.'}
+      {no:1, h:'<b>Do not count</b> the gap between morning and afternoon work, or your own drive to the work site.'},
+      {no:1, h:'<b>Rate not in the list?</b> Do not choose another one. Ask your supervisor.'}
     ]},
-  {id:'C2', g:2, t:'Add your kilometres', anim:true,
-    lead:'One line holds one earnings rate. Kilometres need their own line.',
-    shot:{src:'img/C2.jpg', what:"Two lines: hours and kilometres, with a kilometre number above 24", marks:[{x:2.5,y:72.4,w:13.9,h:17.3,n:1,act:"click"},{x:2.5,y:53.1,w:41.9,h:16.3,n:2,act:"click"},{x:44.7,y:53.1,w:37.0,h:16.3,n:3,act:"edit",side:"r"}],
-      nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:36.5,w:31.8,h:9.5,n:1,act:"click"},{x:2.6,y:25.8,w:95.5,h:9.0,n:2,act:"click"},{x:2.9,y:77.6,w:84.4,h:9.0,n:3,act:"edit"}],
-      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.4,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"}]},
+  {id:'C2', g:2, t:'Add your kilometres, then submit', anim:true,
+    shot:{src:'img/C2.jpg', what:"Finished timesheet: hours and kilometres lines, and the Submit button", marks:[{x:3.0,y:68.7,w:13.9,h:8.0,n:1,act:"click"},{x:3.0,y:59.7,w:41.7,h:7.6,n:2,act:"click"},{x:44.9,y:59.7,w:36.8,h:7.6,n:3,act:"edit",side:"r"},{x:79.2,y:90.0,w:11.3,h:8.7,n:4,act:"click"}],
+      nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:31.0,w:31.8,h:8.1,n:1,act:"click"},{x:2.6,y:21.9,w:95.5,h:7.6,n:2,act:"click"},{x:2.9,y:65.9,w:84.4,h:7.6,n:3,act:"edit"},{x:52.4,y:89.9,w:25.9,h:8.8,n:4,act:"click"}],
+      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.4,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"},{x:73.9,y:93.1,w:9.7,h:6.0,n:4,act:"click"}]},
     pts:[
-      {n:1, h:'<b>Use the empty second line.</b> No empty line? Click + Add another line.'},
+      {n:1, h:'<b>Use the empty second line</b> (one rate per line). No empty line? Click + Add another line.'},
       {n:2, h:`<b>Choose ${rate(CFG.kmRate)}.</b>`},
-      {n:3, h:'<b>Type your kilometres</b> under each day. One total per day.'},
-      '<b>Use your photos</b> from the start and end of each job to work out the kilometres.',
-      {no:1, h:'<b>Do not count</b> your own drive to the work site.'}
+      {n:3, h:'<b>Type your kilometres</b> for each day: one total per day. Work them out from your photos at the start and end of each job.'},
+      {no:1, h:'<b>Do not count</b> your own drive to the work site.'},
+      '<b>Check</b> the fortnight ending date, and the hours and kilometres in both weeks.',
+      {n:4, h:'<b>Click Submit.</b>'}
     ]},
 
-  {id:'D1', g:3, t:'Check, then submit', anim:true,
-    shot:{src:'img/D1.jpg', what:"Finished timesheet with hours, kilometres and the Submit button", marks:[{x:0.7,y:1.9,w:36.1,h:5.3,n:1},{x:3.0,y:51.7,w:83.9,h:15.5,n:2,act:"edit"},{x:79.2,y:90.0,w:11.3,h:8.7,n:3,act:"click"}],
-      nsrc:'img/D1n.webp', nmarks:[{x:1.6,y:1.0,w:82.8,h:5.5,n:1},{x:2.6,y:25.2,w:95.5,h:16.1,n:2,act:"edit"},{x:2.9,y:59.7,w:96.0,h:16.1,g:2,act:"edit"},{x:52.4,y:89.6,w:25.9,h:9.0,n:3,act:"click"}],
-      fsrc:'img/D1f.webp', fmarks:[{x:6.4,y:32.5,w:31.1,h:3.6,n:1},{x:8.4,y:66.8,w:72.1,h:10.7,n:2,act:"edit"},{x:73.9,y:93.1,w:9.7,h:6.0,n:3,act:"click"}]},
-    pts:[
-      {n:1, h:'<b>The fortnight ending date</b> is right.'},
-      {n:2, h:'<b>Hours and kilometres</b> are right for each day. Use the arrow to check both weeks.'},
-      {n:3, h:'<b>Click Submit.</b>'}
-    ]},
-  {id:'D2', g:3, t:'Choose who approves it', anim:true,
-    shot:{src:'img/D2.jpg', what:"Submit timesheet window with the approver list open (names hidden)", marks:[{x:4.2,y:23.6,w:91.2,h:6.0,n:1,act:"click"}],
-      fsrc:'img/D2f.webp', fmarks:[{x:35.7,y:49.3,w:29.6,h:3.4,n:1,act:"click"}]},
+  {id:'D1', g:3, t:'Choose who approves it', anim:true,
+    shot:{src:'img/D1.jpg', what:"Submit timesheet window with the approver list open (names hidden)", marks:[{x:4.2,y:23.6,w:91.2,h:6.0,n:1,act:"click"}],
+      fsrc:'img/D1f.webp', fmarks:[{x:35.7,y:49.3,w:29.6,h:3.4,n:1,act:"click"}]},
     pts:[
       {n:1, h:'<b>Choose your supervisor:</b> the person who emailed you the job details, or the person they named.'},
-      '<b>The list closes</b> after you choose. Then click <b>Submit</b> in this window.'
+      '<b>The list closes</b> when you choose. Then click <b>Submit</b> in this window.'
     ]},
-  {id:'D3', g:3, t:'Look for the green message', anim:true,
-    shot:{src:'img/D3.jpg', what:"Green message: timesheet submitted. Status: Requested", marks:[{x:1.0,y:4.8,w:98.4,h:25.2,n:1},{x:1.5,y:64.1,w:14.8,h:27.4,n:2}],
-      nsrc:'img/D3n.webp', nmarks:[{x:1.7,y:2.9,w:97.9,h:24.8,n:1},{x:2.6,y:66.6,w:26.3,h:26.9,n:2}],
-      fsrc:'img/D3f.webp', fmarks:[{x:11.0,y:37.8,w:77.9,h:6.3,n:1},{x:11.4,y:52.6,w:11.7,h:6.9,n:2}]},
+  {id:'D2', g:3, t:'Look for the green message', anim:true,
+    shot:{src:'img/D2.webp', what:"Green message: timesheet submitted. Status: Requested. Revert to Draft button", marks:[{x:1.0,y:3.3,w:98.4,h:17.4,n:1},{x:1.5,y:44.4,w:14.8,h:19.0,n:2},{x:79.8,y:81.8,w:11.6,h:15.4,n:3}],
+      nsrc:'img/D2n.webp', nmarks:[{x:1.7,y:2.1,w:97.9,h:17.6,n:1},{x:2.6,y:47.3,w:26.3,h:19.1,n:2},{x:64.3,y:81.7,w:20.6,h:15.5,n:3}],
+      fsrc:'img/D2f.webp', fmarks:[{x:11.0,y:37.8,w:77.9,h:6.3,n:1},{x:11.4,y:52.6,w:11.7,h:6.9,n:2},{x:73.4,y:93.0,w:9.2,h:5.6,n:3}]},
     pts:[
-      {n:1, h:'<b>Green message:</b> your timesheet was sent.'},
-      {n:2, h:'<b>Status says Requested.</b> It is waiting for approval.'},
-      {no:1, h:'<b>No green message?</b> It was not sent. Check the page and try again.'}
-    ],
-    box:{c:'ok', h:'Done'}},
-
-  {id:'E1', g:4, t:'Check the status', anim:true,
-    shot:{src:'img/E1.jpg', what:"Overview with the timesheet status", marks:[{x:0.7,y:1.9,w:10.7,h:10.8,n:1,act:"click"},{x:47.0,y:84.4,w:18.9,h:9.5,n:2}],
-      nsrc:'img/E1n.webp', nmarks:[{x:0.9,y:1.8,w:13.3,h:17.7,n:1,act:"click"},{x:58.3,y:75.8,w:23.5,h:15.6,n:2}],
-      fsrc:'img/E1f.webp', fmarks:[{x:13.6,y:29.4,w:4.8,h:4.4,n:1,act:"click"},{x:34.2,y:63.3,w:8.4,h:3.9,n:2}]},
+      {n:1, h:'<b>Green message:</b> your timesheet was sent. You are done.'},
+      {n:2, h:'<b>Status says Requested:</b> waiting for approval.'},
+      {no:1, h:'<b>No green message?</b> It was not sent. Check the page and try again.'},
+      {n:3, h:'<b>Made a mistake?</b> Click Revert to Draft, fix it, then submit again. Already approved? Tell your supervisor.'}
+    ]},
+  {id:'D3', g:3, t:'Check the status', anim:true,
+    shot:{src:'img/D3.jpg', what:"Overview with the timesheet status", marks:[{x:0.7,y:1.9,w:10.7,h:10.8,n:1,act:"click"},{x:47.0,y:84.4,w:18.9,h:9.5,n:2}],
+      nsrc:'img/D3n.webp', nmarks:[{x:0.9,y:1.8,w:13.3,h:17.7,n:1,act:"click"},{x:58.3,y:75.8,w:23.5,h:15.6,n:2}],
+      fsrc:'img/D3f.webp', fmarks:[{x:13.6,y:29.4,w:4.8,h:4.4,n:1,act:"click"},{x:34.2,y:63.3,w:8.4,h:3.9,n:2}]},
     pts:[
       {n:1, h:'<b>Click Overview.</b>'},
       {n:2, h:'<b>Read the status</b> of your timesheet.'},
       {no:1, h:'<b>Draft:</b> not sent. Open it and submit.'},
-      '<b>Pending Approval:</b> waiting for your supervisor. The timesheet itself says Requested.',
+      '<b>Pending Approval:</b> waiting for your supervisor.',
       '<b>Approved:</b> done. It goes into the next pay.'
-    ]},
-  {id:'E2', g:4, t:'Fix a mistake', anim:true,
-    shot:{src:'img/E2.jpg', what:"Submitted timesheet with the Revert to Draft button", marks:[{x:79.8,y:87.9,w:11.6,h:10.3,n:1,act:"click"}],
-      nsrc:'img/E2n.webp', nmarks:[{x:64.3,y:66.7,w:20.6,h:28.3,n:1,act:"click"}],
-      fsrc:'img/E2f.webp', fmarks:[{x:73.4,y:93.0,w:9.2,h:5.6,n:1,act:"click"}]},
-    pts:[
-      {n:1, h:'<b>Open the timesheet</b> and click Revert to Draft.'},
-      '<b>Fix it,</b> then submit again.',
-      {no:1, h:'<b>Already approved?</b> You cannot change it. Tell your supervisor.'}
     ]}
 ];
 
 const FAQ = [   // most common first
   {q:'I cannot find the right fortnight', a:'Choose the fortnight that has your work days.', to:'B2'},
   {q:'The kilometre box only takes up to 24', a:'You are in the Xero Me phone app. Use a web browser.', to:'start'},
-  {q:'I made a mistake after submitting', a:'Revert to Draft, if it is not approved yet.', to:'E2'},
-  {q:'I am not sure it was sent', a:'Look for the green message, then check Overview.', to:'E1'},
+  {q:'I made a mistake after submitting', a:'Revert to Draft, if it is not approved yet.', to:'D2'},
+  {q:'I am not sure it was sent', a:'Look for the green message, then check Overview.', to:'D3'},
   {q:'I missed the Thursday deadline', a:'Submit as soon as you can.', to:'start'},
   {q:'I did not get the invite email', a:'Check junk mail, or ask your supervisor.', to:'A1'},
   {q:'My work days are in two weeks', a:'Click the arrow to switch between week 1 and week 2.', to:'B3'},
@@ -535,12 +505,14 @@ function shotHTML(s, code, full){
   const inner = src
     ? `<img src="${esc(src)}" alt="Screenshot ${code}: ${esc(s.what)}"${sz ? ` width="${sz[0]}" height="${sz[1]}" style="aspect-ratio:${sz[0]}/${sz[1]}"` : ''} decoding="async"><span class="load" aria-hidden="true">${loadArt(code)}</span>`
     : `<span class="ph" role="img" aria-label="Placeholder for screenshot ${code}: ${esc(s.what)}"><span class="load">${loadArt(code)}</span></span>`;
+  const st = STEPS.find(x => x.id === code), aft = !full && src && st && st.after ? (src === s.nsrc ? st.after.nsrc : st.after.src) : '';
+  const after = aft ? `<img class="after" src="${esc(aft)}" alt="" aria-hidden="true" decoding="async">` : '';
   const ms = v.marks;
   // Boxes sit on the screenshot. Numbers sit in a gutter beside it, level with their box,
   // so a number never covers the screenshot and a box line never crosses a number.
   const boxes = ms.map(m => `<span class="mark${m.no?' no':''}" data-n="${m.n || m.g || ''}"${m.act ? ` data-act="${m.act}"` : ''}${m.tx != null ? ` data-tx="${m.tx}" data-ty="${m.ty}"` : ''} style="left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%"></span>`).join('');
   const badges = ms.filter(m => m.n).map(m => `<b class="badge ${m.side==='r'?'r':'l'}${m.no?' no':''}" data-c="${(m.y + m.h/2).toFixed(2)}" style="top:clamp(0px, calc(${(m.y + m.h/2).toFixed(1)}% - 11px), calc(100% - 22px))">${m.n}</b>`).join('');
-  return `<span class="pic${src ? '' : ' ready'}">${inner}${boxes}${badges}</span>`;
+  return `<span class="pic${src ? '' : ' ready'}">${inner}${after}${boxes}${badges}</span>`;
 }
 function gutters(s, full){ const ms = s ? pick(s, full).marks : []; return (ms.length ? ' gl' : '') + (ms.some(m => m.side === 'r') ? ' gr' : ''); }
 
@@ -564,7 +536,7 @@ function spreadBadges(root){
 }
 function watchPics(root){
   // The placeholder stays until the picture is downloaded; a picture that fails keeps its placeholder.
-  (root || document).querySelectorAll('.pic img').forEach(img => {
+  (root || document).querySelectorAll('.pic img:not(.after)').forEach(img => {
     const done = () => { if (img.naturalWidth > 0) img.closest('.pic').classList.add('ready'); spreadBadges(img.closest('.pic').parentNode); };
     if (img.complete) done(); else img.addEventListener('load', done, {once:true});
   });
@@ -681,23 +653,23 @@ function navHTML(id){
   return `<div class="nav">${prevBtn}${nextBtn}</div>`;
 }
 
-/* Start page = everything to know before logging in + the first-time / returning choice.
-   The two choice buttons are the only way forward, so nobody misses the choice. */
+/* Start page = what to know before logging in + the first-time / returning choice.
+   A swipe left counts as "first time" (A1): that path skips nothing. */
 function startView(){
   return `<section class="card">
     <h1 tabindex="-1">Submit your hours and kilometres in Xero</h1>
-    <p class="lead">About 5 minutes. Tap any step at the top to jump to it.</p>
+    <p class="lead">About 5 minutes.</p>
     <ul class="keys">
-      <li><span class="n">1</span><div><b>Use a computer or iPad browser, not the Xero Me phone app.</b><span>The app's kilometre box only takes 0 to 24. Use Chrome, Safari or Edge. A phone browser works, but the text is very small.</span></div></li>
-      <li><span class="n">2</span><div><b>Have your numbers ready.</b><span>The days you worked. Your hours and your kilometres for each day.</span></div></li>
-      <li><span class="n">3</span><div><b>Submit by 11:59 pm Thursday of the week you worked.</b><span>Pay runs every two weeks. Late? Your pay may come two weeks later. Worked Friday, Saturday or Sunday? Submit as soon as you finish work.</span></div></li>
+      <li><span class="n">1</span><div><b>Use a computer or iPad browser, not the Xero Me phone app.</b><span>The app's kilometre box only takes 0 to 24. A phone browser works, but the text is small.</span></div></li>
+      <li><span class="n">2</span><div><b>Have your numbers ready:</b><span>your hours and kilometres for each day you worked.</span></div></li>
+      <li><span class="n">3</span><div><b>Submit by 11:59 pm Thursday of the week you worked.</b><span>Late? Your pay may come two weeks later. Worked Friday to Sunday? Submit as soon as you finish.</span></div></li>
     </ul>
   </section>
   <section class="card ask">
     <h2>Used Xero for Matrix before?</h2>
     <div class="choices">
-      <button class="choice main" type="button" data-to="A1" data-skip="0"><span><b>No, first time</b><span>Choose this too if you only use Xero for another job.</span></span>${AR}</button>
-      <button class="choice" type="button" data-to="B1" data-skip="1"><span><b>Yes</b><span>Skip to B1.</span></span>${AR}</button>
+      <button class="choice main" type="button" data-to="A1" data-skip="0"><span><b>No, first time</b><span>Also choose this if you only use Xero for another job.</span></span>${AR}</button>
+      <button class="choice" type="button" data-to="B1" data-skip="1"><span><b>Yes</b></span>${AR}</button>
     </div>
   </section>`;
 }
@@ -736,6 +708,7 @@ function stopDemo(){
   demoT.forEach(clearTimeout); demoT = [];
   document.querySelectorAll('.cur').forEach(h => h.remove());
   document.querySelectorAll('.on,.dim').forEach(e => e.classList.remove('on','dim'));
+  document.querySelectorAll('.pic.swapped').forEach(p => p.classList.remove('swapped'));
 }
 function playDemo(){
   stopDemo();
@@ -754,7 +727,8 @@ function playDemo(){
   cur.style.transition = 'opacity .3s';                 // first stop: fade in on mark 1, no travel
   pic.appendChild(cur);
   const at = (ms, fn) => demoT.push(setTimeout(fn, ms));
-  let t = 250, stop = 0;
+  let t = 250, stop = 0, swapped = false;
+  const swap = !!pic.querySelector('img.after');      // B3: the click switches the picture to week 2
   ns.forEach(n => {
     const group = marks.filter(m => m.dataset.n === n);
     group.forEach((bx, i) => {
@@ -771,6 +745,7 @@ function playDemo(){
       if (kind === 'click') {                           // two taps
         [0, 700].forEach(d => { at(t + d, () => cur.classList.add('press')); at(t + d + 450, () => cur.classList.remove('press')); });
         t += 1600;
+        if (swap && !swapped) { swapped = true; at(t - 450, () => pic.classList.add('swapped')); t += 700; }   // the page changes after the click
       } else t += i < group.length - 1 ? 900 : 1700;    // time to read the point
     });
   });
@@ -779,7 +754,7 @@ function playDemo(){
 /* Runs fn once the step's picture is downloaded, decoded and has a size on the page.
    Nothing happens before that: the demo needs the picture to know where the marks are. */
 function whenPicReady(pic, fn){
-  const img = pic && pic.querySelector('img'); if (!img) return;
+  const img = pic && pic.querySelector('img:not(.after)'); if (!img) return;
   let tries = 0;
   const check = () => {
     if (!img.isConnected) return;                                     // the person already left this step
@@ -993,66 +968,22 @@ function zFit(){
 }
 function zSet(s, anim){ const k = Math.max(1, Math.min(Z.max, s)) / Z.s; Z.s *= k; Z.x *= k; Z.y *= k; zApply(anim); }
 
-/* first time in this visit: show how to zoom and move the picture, in three slow steps.
-   The finger marks and the picture move together: 1 zoom in, 2 move to the right side, 3 zoom out. */
-let zHintSeen = false, zRaf = 0;
-function hideZHint(){ cancelAnimationFrame(zRaf); zRaf = 0; $('#zhint').hidden = true; }
-function showZHint(){
-  if (zHintSeen || !Z.el) return;
-  zHintSeen = true;
-  const touch = matchMedia('(pointer: coarse)').matches, cap = $('#zhtext'), [d1, d2] = $('#zhint').querySelectorAll('.zd');
-  const TXT = touch ? ['1. Spread two fingers to zoom in', '2. Drag to move the picture', '3. Pinch to zoom out']
-                    : ['1. Scroll to zoom in', '2. Drag to move the picture', '3. Scroll back to zoom out'];
-  const S = Math.min(Z.max, 2.2), W = zin.clientWidth;
-  const D = Math.min(W * .5, Math.max(0, (Z.el.offsetWidth * S - W) / 2 + 14));     // how far the picture can move left
-  const ease = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
-  const seg = (t, a, b) => t <= a ? 0 : t >= b ? 1 : ease((t - a) / (b - a));
-  const dot = (el, x, y, o) => { el.style.opacity = o; el.style.transform = `translate(${x}px,${y}px)`; };
-  $('#zhint').hidden = false;
-  let t0 = 0;
-  function frame(now){
-    if (!Z.el) return;
-    if (!t0) t0 = now;
-    const t = now - t0;
-    if (t < 3200) {                                   // 1: two fingers move apart, the picture grows with them
-      cap.textContent = TXT[0];
-      const p = seg(t, 800, 2700), o = Math.min(seg(t, 0, 500), 1 - seg(t, 2900, 3200)), r = 16 + 58 * p;
-      dot(d1, -r, r, touch ? o : 0); dot(d2, r, -r, touch ? o : 0);
-      Z.s = 1 + (S - 1) * p; Z.x = 0; Z.y = 0;
-    } else if (t < 6400) {                            // 2: one finger moves right to left, the picture follows by the same distance
-      cap.textContent = TXT[1];
-      const p = seg(t, 4000, 5900), o = Math.min(seg(t, 3200, 3700), 1 - seg(t, 6100, 6400));
-      dot(d1, D / 2 - D * p, 0, o); dot(d2, 0, 0, 0);
-      Z.s = S; Z.x = -D * p; Z.y = 0;
-    } else if (t < 9600) {                            // 3: two fingers move together, the picture shrinks back
-      cap.textContent = TXT[2];
-      const p = seg(t, 7200, 9100), o = Math.min(seg(t, 6400, 6900), 1 - seg(t, 9300, 9600)), r = 74 - 58 * p;
-      dot(d1, -r, r, touch ? o : 0); dot(d2, r, -r, touch ? o : 0);
-      Z.s = S - (S - 1) * p; Z.x = -D * (1 - p); Z.y = 0;
-    } else { Z.s = 1; Z.x = 0; Z.y = 0; zApply(false); hideZHint(); return; }
-    zApply(false);
-    zRaf = requestAnimationFrame(frame);
-  }
-  zRaf = requestAnimationFrame(frame);
-}
-
 function openZoom(id){
   const s = STEPS.find(x => x.id === id);
-  stopDemo();
+  stopDemo(); stopPageHint(); SB.classList.remove('show');   // nothing moves behind the enlarged picture
   lastFocus = document.activeElement;
   $('#zcode').textContent = 'Screenshot ' + id;
   zin.innerHTML = `<div class="shot${gutters(s.shot, true)}">${shotHTML(s.shot, id, true)}</div>`;
   Z.el = zin.firstElementChild;
-  zin.appendChild($('#zhint'));
   $('#zoom').hidden = false; document.body.style.overflow = 'hidden'; $('#zclose').focus();
   watchPics(zin);   // swaps the placeholder for the picture once it has downloaded (was missing: stuck on "loading")
-  const img = Z.el.querySelector('img'), ready = () => { zFit(); showZHint(); };
+  const img = Z.el.querySelector('img'), ready = () => zFit();   // the whole picture, fitted to the screen; no zoom hint (people pinch by themselves)
   if (!img || img.complete) ready(); else img.addEventListener('load', ready, {once:true});
 }
-function closeZoom(){ hideZHint(); document.body.appendChild($('#zhint')); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
+function closeZoom(){ requestAnimationFrame(syncStartBar); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
 $('#zclose').addEventListener('click', closeZoom);
-$('#zplus').addEventListener('click', () => { hideZHint(); zSet(Z.s * 1.6, true); });
-$('#zout').addEventListener('click', () => { hideZHint(); zSet(Z.s / 1.6, true); });
+$('#zplus').addEventListener('click', () => { zSet(Z.s * 1.6, true); });
+$('#zout').addEventListener('click', () => { zSet(Z.s / 1.6, true); });
 window.addEventListener('resize', () => { if (Z.el) zFit(); });
 
 const zp = new Map(); let zg = null, zMoved = false, zTap = 0;
@@ -1065,7 +996,7 @@ zin.addEventListener('pointerdown', e => {
   if (!Z.el) return;
   if (!zp.size) zMoved = false;
   zp.set(e.pointerId, {x:e.clientX, y:e.clientY}); try { zin.setPointerCapture(e.pointerId); } catch(err) {}
-  hideZHint(); zStart();
+  zStart();
 });
 zin.addEventListener('pointermove', e => {
   if (!zp.has(e.pointerId) || !zg) return;
@@ -1093,7 +1024,7 @@ function zEnd(e){
 }
 zin.addEventListener('pointerup', zEnd);
 zin.addEventListener('pointercancel', zEnd);
-zin.addEventListener('wheel', e => { if (!Z.el) return; e.preventDefault(); hideZHint(); zSet(Z.s * Math.exp(-e.deltaY * 0.0022), false); }, {passive:false});
+zin.addEventListener('wheel', e => { if (!Z.el) return; e.preventDefault(); zSet(Z.s * Math.exp(-e.deltaY * 0.0022), false); }, {passive:false});
 
 /* ---------- keyboard: Esc closes zoom, left / right arrows change step ---------- */
 document.addEventListener('keydown', e => {
