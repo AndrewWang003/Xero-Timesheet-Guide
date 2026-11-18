@@ -509,6 +509,8 @@ const FAQ = [   // most common first
 
 /* ---------- small helpers ---------- */
 const $ = s => document.querySelector(s);
+// media query change, also in older Safari (before iOS 14), which only has addListener
+const onMedia = (mq, fn) => mq.addEventListener ? mq.addEventListener('change', fn) : mq.addListener && mq.addListener(fn);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ORDER = ['start', ...STEPS.map(s => s.id), 'help'];
 const seen = new Set();
@@ -738,16 +740,17 @@ const CUR = '<span class="g hand"><svg viewBox="0 0 44 54" aria-hidden="true"><g
 let demoT = [];
 function stopDemo(){
   demoT.forEach(clearTimeout); demoT = [];
-  document.querySelectorAll('.cur').forEach(h => h.remove());
-  document.querySelectorAll('.on,.dim').forEach(e => e.classList.remove('on','dim'));
-  document.querySelectorAll('.pic.swapped').forEach(p => p.classList.remove('swapped'));
+  const v = $('#view'); if (!v) return;                 // only this page's demo: other parts of the page use the same class names
+  v.querySelectorAll('.cur').forEach(h => h.remove());
+  v.querySelectorAll('.mark.on,.mark.dim,.badge.on,.badge.dim,.pts li.on').forEach(e => e.classList.remove('on','dim'));
+  v.querySelectorAll('.pic.swapped').forEach(p => p.classList.remove('swapped'));
 }
 function playDemo(){
   stopDemo();
   const root = $('#view'), pic = root.querySelector('.pic');
   if (!pic || !pic.clientHeight) return;
   const marks = [...pic.querySelectorAll('.mark')], badges = [...pic.querySelectorAll('.badge')];
-  const ns = [...new Set(marks.map(m => m.dataset.n).filter(Boolean))].sort();
+  const ns = [...new Set(marks.map(m => m.dataset.n).filter(Boolean))].sort((a, b) => a - b);   // as numbers: 10 comes after 9
   if (!ns.length) return;
   // eye: on the bottom edge of the box, so it does not cover what you check. hand: finger tip inside the box.
   // eye: on the bottom edge of the box. edit: inside the box, left part. click: the middle of the box, which must be
@@ -902,7 +905,9 @@ function render(id, quiet, keep){   // keep = stay at the same scroll height (af
   if (s && s.anim) armDemo(fresh);           // Play switches on when the picture is ready; plays by itself on the first visit only
   if (!keep) window.scrollTo(0,0);   // Next / Previous / strip: start at the top of the new page
   const h = $('#view h1'); if (h) h.focus({preventScroll:true});
-  if (location.hash.slice(1) !== id) { try { history.replaceState(null, '', '#' + id); } catch(e) {} }
+  // Browser history: each page change adds an entry, so the phone's Back button goes to the page before.
+  // Coming back through the history (hashchange) changes nothing here: the address already shows this page.
+  if (location.hash.slice(1) !== id) { try { history[was ? 'pushState' : 'replaceState'](null, '', '#' + id); } catch(e) {} }
 }
 function go(id){ render(id); }
 
@@ -1027,11 +1032,18 @@ function openZoom(id){
   zin.innerHTML = `<div class="shot${gutters(s.shot, true)}">${shotHTML(s.shot, id, true)}</div>`;
   Z.el = zin.firstElementChild;
   $('#zoom').hidden = false; document.body.style.overflow = 'hidden'; $('#zclose').focus();
+  zoomId = Date.now();   // each opening has its own history entry, so an old entry (reached with Forward) is never taken for it
+  try { history.pushState({zoom:zoomId}, ''); } catch(e) {}   // the phone's Back button closes the enlarged view first
   watchPics(zin);   // swaps the placeholder for the picture once it has downloaded (was missing: stuck on "loading")
   const img = Z.el.querySelector('img'), ready = () => zFit();   // the whole picture, fitted to the screen; no zoom hint (people pinch by themselves)
   if (!img || img.complete) ready(); else img.addEventListener('load', ready, {once:true});
 }
-function closeZoom(){ clearTimeout(Z.ct); requestAnimationFrame(syncStartBar); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
+// Close: if opening the view added a history entry, go back through it (popstate below hides the view),
+// so the Back button and the Close button leave the history in the same state.
+let zoomId = 0;
+function closeZoom(){ if (history.state && history.state.zoom === zoomId) history.back(); else hideZoom(); }
+addEventListener('popstate', () => { if (!$('#zoom').hidden && !(history.state && history.state.zoom === zoomId)) hideZoom(); });
+function hideZoom(){ clearTimeout(Z.ct); requestAnimationFrame(syncStartBar); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
 $('#zclose').addEventListener('click', closeZoom);
 $('#zplus').addEventListener('click', () => { zSet(Z.s * 1.6, true); });
 $('#zout').addEventListener('click', () => { zSet(Z.s / 1.6, true); });
@@ -1066,7 +1078,7 @@ zin.addEventListener('pointermove', e => {
 function zEnd(e){
   if (!zp.delete(e.pointerId)) return;
   zStart();
-  if (zp.size || zMoved || !Z.el) return;
+  if (zp.size || zMoved || !Z.el || e.type === 'pointercancel') return;   // a cancelled touch is not a tap (it has no position)
   // a tap: outside the picture closes; twice on the picture zooms in or back out
   const r = Z.el.getBoundingClientRect(), inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
   if (!inside) { closeZoom(); return; }
@@ -1095,10 +1107,10 @@ const sun = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12"
 const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
 function paintTheme(){ const d = isDark(); $('#themeBtn').innerHTML = d ? sun : moon; $('#themeBtn').setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode'); }
 $('#themeBtn').addEventListener('click', () => { document.documentElement.dataset.theme = isDark() ? 'light' : 'dark'; paintTheme(); });
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintTheme);
+onMedia(matchMedia('(prefers-color-scheme: dark)'), paintTheme);
 
 // crossing the phone / wide boundary (rotate, resize): draw the current step again with the other picture
-NARROW.addEventListener('change', () => { if (current && $('#zoom').hidden) render(current); });
+onMedia(NARROW, () => { if (current && $('#zoom').hidden) { const y = window.scrollY; render(current, true, true); window.scrollTo(0, y); } });   // keep the reading height
 
 buildStrip(); paintTheme();
 render(location.hash.slice(1) || 'start');
