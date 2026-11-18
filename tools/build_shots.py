@@ -6,7 +6,7 @@
 For each step this makes:
   img/<step>.jpg  (or .webp)  the full screenshot: wide screens, and the enlarged view on every screen
   img/<step>n.webp            a close-up for phones, made of one or more pieces cut from the same screenshot
-  img/<step>f.webp            the whole screenshot(s), for the enlarged view
+  img/<step>f.webp            the whole screenshot(s) at full width, for the enlarged view
 and writes tools/shots.json with the mark positions, in % of each picture.
 
 The original screenshots are NOT in this repository: they show names, pay rates and hours.
@@ -53,9 +53,9 @@ def build(name, strips, marks, outw):
     if len(parts)>1:   # the band between pieces is transparent: the page colours it (same as the number gutter), in day and night mode
         cv=Image.new('RGBA',(outw,H),(0,0,0,0))
         for im,(oy,_) in zip(parts,offs): cv.paste(im.convert('RGBA'),(0,oy))
-        cv.save(OUT+name,quality=88,method=6)
+        cv.save(OUT+name,quality=92 if name.endswith('f.webp') else 88,method=6)
     else:
-        parts[0].save(OUT+name,quality=88)
+        parts[0].save(OUT+name,quality=92 if name.endswith('f.webp') else 88)
     out=[]
     for m in marks:
         i,(mx0,my0,mx1,my1)=m['s'],m['b']; (bx0,by0,bx1,by1)=strips[i][1]; oy,sc=offs[i]
@@ -83,7 +83,7 @@ def step(code, wide, wmarks, narrow=None, nmarks=None, ww=1600):
         if f not in files: files.append(f)
     full=[(f,(0,0)+load(f).size) for f in files]
     fm=[dict(m, s=files.index(wide[m['s']][0])) for m in wmarks]
-    R[code].update(fsrc=f'img/{code}f.webp', fmarks=build(f'{code}f.webp', full, fm, min(2048, max(load(f).size[0] for f in files))))
+    R[code].update(fsrc=f'img/{code}f.webp', fmarks=build(f'{code}f.webp', full, fm, max(load(f).size[0] for f in files)))   # full width of the original: people zoom in
 org=(180,15,770,100); add=(2005,708,2235,780)
 step('B1',[('B1&B2.png',(0,0,2290,1080))],[M(0,org,1),M(0,add,2,act='click')],
      [('B1&B2.png',(0,0,920,215)),('B1&B2.png',(1330,690,2250,800)),('B1&B2.png',(340,690,1260,1062))],[M(0,org,1),M(1,add,2,act='click')])
@@ -96,7 +96,7 @@ B3M=[M(0,arrow,1,act='click'),M(0,we,2),M(0,dates,g=2)]
 step('B3',[('B4-1.png',B3W)],B3M,[('B4-1.png',B3N)],B3M)
 build('B3-2.jpg',[('B4-2.png',B3W)],[],1600); build('B3n-2.webp',[('B4-2.png',B3N)],[],920)
 R['B3'].update(fmarks=build('B3f.webp',[('B4-1.png',(0,0)+load('B4-1.png').size),('B4-2.png',(0,0)+load('B4-2.png').size)],
-     [M(0,arrow,1,act='click'),M(1,we,2),M(1,dates,g=2)],2048))
+     [M(0,arrow,1,act='click'),M(1,we,2),M(1,dates,g=2)],load('B4-1.png').size[0]))
 rate=(430,838,1262,935); cells=(1278,1036,2034,1108)
 step('C1',[('C2.jpeg',(370,400,2420,1290))],[M(0,rate,1,act='click'),M(0,cells,2,act='edit')],
      [('C2.jpeg',(400,405,1320,1110)),('C2.jpeg',(1250,905,2170,1200))],[M(0,rate,1,act='click'),M(1,cells,2,act='edit')])

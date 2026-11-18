@@ -259,7 +259,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
 .zbtns{display:flex;gap:8px}
 /* the whole picture is visible when it opens. Pinch, wheel or + / - to zoom. Drag to move. */
 .zoom .zin{flex:1;position:relative;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:grab}
-.zoom .zin .shot{max-width:none;cursor:inherit;pointer-events:none;will-change:transform}
+.zoom .zin .shot{position:absolute;left:50%;top:50%;max-width:none;margin:0;cursor:inherit;pointer-events:none;transform:translate(-50%,-50%)}
 
 /* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
 .pic img.after,.pic.ready img.after{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
@@ -334,7 +334,7 @@ const CFG = {
   placeholder: 'A'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
-/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2048,1229],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2048,1229],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2048,2488],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2048,1143],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2048,1229],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2048,1229],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2048,1229],"img/D3n.webp":[920,385]};/* SIZES:end */
+/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2560,1536],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2560,1536],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2560,3102],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2752,1536],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2560,1536],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2560,1536],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2560,1536],"img/D3n.webp":[920,385]};/* SIZES:end */
 const rate = t => `<span class="rate">${t}</span>`;
 const AR = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2 L10 7 L5 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const AL = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 L4 7 L9 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -403,7 +403,7 @@ const STEPS = [
     after:{src:'img/B3-2.jpg', nsrc:'img/B3n-2.webp'},   // the demo clicks the arrow, then this week 2 picture fades in
     shot:{src:'img/B3.jpg', what:"Timesheet on week 1, with the arrow next to Week ending", marks:[{x:75.8,y:31.9,w:2.9,h:11.9,n:1,act:"click"},{x:60.5,y:34.0,w:14.9,h:13.2,n:2},{x:44.2,y:76.6,w:35.3,h:20.2,g:2}],
       nsrc:'img/B3n.webp', nmarks:[{x:84.8,y:20.0,w:6.1,h:14.0,n:1,act:"click"},{x:53.3,y:22.5,w:30.9,h:15.5,n:2},{x:19.6,y:72.5,w:72.8,h:23.8,g:2}],
-      fsrc:'img/B3f.webp', fmarks:[{x:69.5,y:22.2,w:2.2,h:1.8,n:1,act:"click"},{x:58.2,y:73.1,w:11.1,h:2.0,n:2},{x:46.1,y:79.5,w:26.2,h:3.1,g:2}]},
+      fsrc:'img/B3f.webp', fmarks:[{x:69.5,y:22.2,w:2.2,h:1.8,n:1,act:"click"},{x:58.2,y:73.0,w:11.1,h:2.0,n:2},{x:46.1,y:79.5,w:26.2,h:3.1,g:2}]},
     pts:[
       {n:1, h:'It opens on week 1. <b>Click the arrow</b> next to Week ending for week 2.'},
       {n:2, h:'<b>Week ending and the dates change.</b> Check they are the days you worked.'}
@@ -412,7 +412,7 @@ const STEPS = [
   {id:'C1', g:2, t:'Enter your hours', anim:true,
     shot:{src:'img/C1.jpg', what:"Earnings rate menu, open, and the boxes for each day", marks:[{x:2.9,y:49.2,w:40.6,h:10.9,n:1,act:"click"},{x:44.3,y:71.4,w:36.9,h:8.1,n:2,act:"edit"}],
       nsrc:'img/C1n.webp', nmarks:[{x:3.3,y:42.0,w:90.4,h:9.4,n:1,act:"click"},{x:3.0,y:84.1,w:82.2,h:7.0,n:2,act:"edit"}],
-      fsrc:'img/C1f.webp', fmarks:[{x:15.6,y:54.6,w:30.2,h:6.3,n:1,act:"click"},{x:46.4,y:67.5,w:27.5,h:4.7,n:2,act:"edit"}]},
+      fsrc:'img/C1f.webp', fmarks:[{x:15.6,y:54.6,w:30.2,h:6.3,n:1,act:"click"},{x:46.4,y:67.4,w:27.5,h:4.7,n:2,act:"edit"}]},
     pts:[
       {n:1, h:`<b>Click the Earnings Rate box and choose ${rate(CFG.hourRate)}.</b> The number changes every year.`},
       {n:2, h:'<b>Type your hours</b> for each day as a decimal (minutes ÷ 60): 7 hours 30 minutes = 7.5, 7 hours 20 minutes = 7.33.'},
@@ -423,7 +423,7 @@ const STEPS = [
   {id:'C2', g:2, t:'Add your kilometres, then submit', anim:true,
     shot:{src:'img/C2.jpg', what:"Finished timesheet: hours and kilometres lines, and the Submit button", marks:[{x:3.0,y:68.7,w:13.9,h:8.0,n:1,act:"click"},{x:3.0,y:59.7,w:41.7,h:7.6,n:2,act:"click"},{x:44.9,y:59.7,w:36.8,h:7.6,n:3,act:"edit",side:"r"},{x:79.2,y:90.0,w:11.3,h:8.7,n:4,act:"click"}],
       nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:31.0,w:31.8,h:8.1,n:1,act:"click"},{x:2.6,y:21.9,w:95.5,h:7.6,n:2,act:"click"},{x:2.9,y:65.9,w:84.4,h:7.6,n:3,act:"edit"},{x:52.4,y:89.9,w:25.9,h:8.8,n:4,act:"click"}],
-      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.4,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"},{x:73.9,y:93.1,w:9.7,h:6.0,n:4,act:"click"}]},
+      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.5,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"},{x:73.9,y:93.1,w:9.7,h:6.0,n:4,act:"click"}]},
     pts:[
       {n:1, h:'<b>Use the empty second line</b> (one rate per line). No empty line? Click + Add another line.'},
       {n:2, h:`<b>Choose ${rate(CFG.kmRate)}.</b>`},
@@ -947,22 +947,41 @@ document.getElementById('pager').addEventListener('touchcancel', () => swEnd(fal
 /* ---------- zoom: opens with the whole picture visible.
    Pinch, mouse wheel or + / - to zoom. Drag to move. Double tap to zoom in or back out. ---------- */
 let lastFocus = null;
-const zin = $('#zin'), Z = {s:1, x:0, y:0, max:4, el:null};
+const zin = $('#zin'), Z = {s:1, x:0, y:0, max:4, el:null, k:1, w0:0, h0:0, ct:0};
+/* Sharp zoom: a phone decodes a big picture only at the size it is shown, so a CSS scale() alone stretches a small
+   copy and looks blurred. During a gesture the picture is scaled (smooth); shortly after it stops, the picture is
+   laid out at its real zoomed width (Z.k), and the browser draws it again at full detail. */
 function zApply(anim){
   const el = Z.el; if (!el) return;
   if (Z.s <= 1.001) { Z.s = 1; Z.x = 0; Z.y = 0; }
   else {   // keep the picture from leaving the screen
-    const mx = Math.max(0, (el.offsetWidth * Z.s - zin.clientWidth) / 2 + 14), my = Math.max(0, (el.offsetHeight * Z.s - zin.clientHeight) / 2 + 14);
+    const mx = Math.max(0, (Z.w0 * Z.s - zin.clientWidth) / 2 + 14), my = Math.max(0, (Z.h0 * Z.s - zin.clientHeight) / 2 + 14);
     Z.x = Math.max(-mx, Math.min(mx, Z.x)); Z.y = Math.max(-my, Math.min(my, Z.y));
   }
   el.style.transition = anim ? 'transform .28s' : 'none';
-  el.style.transform = `translate(${Z.x}px,${Z.y}px) scale(${Z.s})`;
+  el.style.transform = `translate(-50%,-50%) translate(${Z.x}px,${Z.y}px) scale(${Z.s / Z.k})`;
+  clearTimeout(Z.ct); Z.ct = setTimeout(zCommit, anim ? 320 : 180);
+}
+function zCommit(){
+  const el = Z.el; if (!el || Math.abs(Z.s - Z.k) < .001) return;
+  if (zp.size) { Z.ct = setTimeout(zCommit, 120); return; }            // fingers still down: wait
+  // Only the screenshot grows; the number gutters keep their 30 px. So the screenshot keeps exactly the size and
+  // place it had while scaled: move by half the gutter difference when the gutters are on one side only.
+  const r = Z.s / Z.k;
+  if (Z.s > 1.001) Z.x += (Z.gl - Z.gr) * (r - 1) / 2; else Z.x = 0;
+  Z.k = Z.s;
+  el.style.transition = 'none';
+  el.style.width = ((Z.w0 - Z.gl - Z.gr) * Z.k + Z.gl + Z.gr) + 'px';
+  el.style.transform = `translate(-50%,-50%) translate(${Z.x}px,${Z.y}px)`;
+  spreadBadges(zin);
 }
 function zFit(){
   const el = Z.el, img = el && el.querySelector('img'); if (!img || !img.naturalWidth) return;
   const gut = (el.classList.contains('gl') ? 30 : 0) + (el.classList.contains('gr') ? 30 : 0);
   const w = Math.max(120, Math.min(zin.clientWidth - 28, (zin.clientHeight - 28) * img.naturalWidth / img.naturalHeight + gut));
+  clearTimeout(Z.ct); Z.k = 1; Z.gl = el.classList.contains('gl') ? 30 : 0; Z.gr = el.classList.contains('gr') ? 30 : 0;
   el.style.width = w + 'px';
+  Z.w0 = el.offsetWidth; Z.h0 = el.offsetHeight;
   Z.max = Math.max(3, img.naturalWidth / Math.max(1, w - gut) * 1.5);
   Z.s = 1; Z.x = 0; Z.y = 0; zApply(false); spreadBadges(zin);
 }
@@ -980,7 +999,7 @@ function openZoom(id){
   const img = Z.el.querySelector('img'), ready = () => zFit();   // the whole picture, fitted to the screen; no zoom hint (people pinch by themselves)
   if (!img || img.complete) ready(); else img.addEventListener('load', ready, {once:true});
 }
-function closeZoom(){ requestAnimationFrame(syncStartBar); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
+function closeZoom(){ clearTimeout(Z.ct); requestAnimationFrame(syncStartBar); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
 $('#zclose').addEventListener('click', closeZoom);
 $('#zplus').addEventListener('click', () => { zSet(Z.s * 1.6, true); });
 $('#zout').addEventListener('click', () => { zSet(Z.s / 1.6, true); });
