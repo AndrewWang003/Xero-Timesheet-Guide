@@ -257,12 +257,6 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
 /* the whole picture is visible when it opens. Pinch, wheel or + / - to zoom. Drag to move. */
 .zoom .zin{flex:1;position:relative;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:grab}
 .zoom .zin .shot{max-width:none;cursor:inherit;pointer-events:none;will-change:transform}
-.zhint{position:absolute;inset:0;z-index:2;pointer-events:none}
-/* finger marks: one per finger, drawn on top of the picture */
-.zd{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;opacity:0;
-  background:var(--amber-dot);border:3px solid var(--white);box-shadow:0 2px 10px var(--shade),0 0 0 7px var(--amber-ring)}
-.zcap{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--navy);color:var(--white);border:1.5px solid var(--amber);border-radius:999px;
-  padding:8px 16px 6px;font-family:var(--f-display);font-weight:800;font-size:15px;white-space:nowrap}
 
 /* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
 .pic img.after,.pic.ready img.after{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
@@ -319,7 +313,6 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   </header>
   <div class="pager" id="pager"><main id="view"></main><div class="peek" id="peek" aria-hidden="true" inert hidden></div></div>
 </div>
-<div class="zhint" id="zhint" hidden><i class="zd"></i><i class="zd"></i><span class="zcap" id="zhtext"></span></div>
 <div class="zoom" id="zoom" hidden role="dialog" aria-modal="true" aria-label="Screenshot, large">
   <div class="zbar"><span id="zcode"></span><span class="zbtns"><button class="zb" id="zout" type="button" aria-label="Zoom out">&minus;</button><button class="zb" id="zplus" type="button" aria-label="Zoom in">+</button><button id="zclose" type="button">Close</button></span></div>
   <div class="zin" id="zin"></div>
@@ -972,66 +965,22 @@ function zFit(){
 }
 function zSet(s, anim){ const k = Math.max(1, Math.min(Z.max, s)) / Z.s; Z.s *= k; Z.x *= k; Z.y *= k; zApply(anim); }
 
-/* first time in this visit: show how to zoom and move the picture, in three slow steps.
-   The finger marks and the picture move together: 1 zoom in, 2 move to the right side, 3 zoom out. */
-let zHintSeen = false, zRaf = 0;
-function hideZHint(){ cancelAnimationFrame(zRaf); zRaf = 0; $('#zhint').hidden = true; }
-function showZHint(){
-  if (zHintSeen || !Z.el) return;
-  zHintSeen = true;
-  const touch = matchMedia('(pointer: coarse)').matches, cap = $('#zhtext'), [d1, d2] = $('#zhint').querySelectorAll('.zd');
-  const TXT = touch ? ['1. Spread two fingers to zoom in', '2. Drag to move the picture', '3. Pinch to zoom out']
-                    : ['1. Scroll to zoom in', '2. Drag to move the picture', '3. Scroll back to zoom out'];
-  const S = Math.min(Z.max, 2.2), W = zin.clientWidth;
-  const D = Math.min(W * .5, Math.max(0, (Z.el.offsetWidth * S - W) / 2 + 14));     // how far the picture can move left
-  const ease = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
-  const seg = (t, a, b) => t <= a ? 0 : t >= b ? 1 : ease((t - a) / (b - a));
-  const dot = (el, x, y, o) => { el.style.opacity = o; el.style.transform = `translate(${x}px,${y}px)`; };
-  $('#zhint').hidden = false;
-  let t0 = 0;
-  function frame(now){
-    if (!Z.el) return;
-    if (!t0) t0 = now;
-    const t = now - t0;
-    if (t < 3200) {                                   // 1: two fingers move apart, the picture grows with them
-      cap.textContent = TXT[0];
-      const p = seg(t, 800, 2700), o = Math.min(seg(t, 0, 500), 1 - seg(t, 2900, 3200)), r = 16 + 58 * p;
-      dot(d1, -r, r, touch ? o : 0); dot(d2, r, -r, touch ? o : 0);
-      Z.s = 1 + (S - 1) * p; Z.x = 0; Z.y = 0;
-    } else if (t < 6400) {                            // 2: one finger moves right to left, the picture follows by the same distance
-      cap.textContent = TXT[1];
-      const p = seg(t, 4000, 5900), o = Math.min(seg(t, 3200, 3700), 1 - seg(t, 6100, 6400));
-      dot(d1, D / 2 - D * p, 0, o); dot(d2, 0, 0, 0);
-      Z.s = S; Z.x = -D * p; Z.y = 0;
-    } else if (t < 9600) {                            // 3: two fingers move together, the picture shrinks back
-      cap.textContent = TXT[2];
-      const p = seg(t, 7200, 9100), o = Math.min(seg(t, 6400, 6900), 1 - seg(t, 9300, 9600)), r = 74 - 58 * p;
-      dot(d1, -r, r, touch ? o : 0); dot(d2, r, -r, touch ? o : 0);
-      Z.s = S - (S - 1) * p; Z.x = -D * (1 - p); Z.y = 0;
-    } else { Z.s = 1; Z.x = 0; Z.y = 0; zApply(false); hideZHint(); return; }
-    zApply(false);
-    zRaf = requestAnimationFrame(frame);
-  }
-  zRaf = requestAnimationFrame(frame);
-}
-
 function openZoom(id){
   const s = STEPS.find(x => x.id === id);
-  stopDemo();
+  stopDemo(); stopPageHint(); SB.classList.remove('show');   // nothing moves behind the enlarged picture
   lastFocus = document.activeElement;
   $('#zcode').textContent = 'Screenshot ' + id;
   zin.innerHTML = `<div class="shot${gutters(s.shot, true)}">${shotHTML(s.shot, id, true)}</div>`;
   Z.el = zin.firstElementChild;
-  zin.appendChild($('#zhint'));
   $('#zoom').hidden = false; document.body.style.overflow = 'hidden'; $('#zclose').focus();
   watchPics(zin);   // swaps the placeholder for the picture once it has downloaded (was missing: stuck on "loading")
-  const img = Z.el.querySelector('img'), ready = () => { zFit(); showZHint(); };
+  const img = Z.el.querySelector('img'), ready = () => zFit();   // the whole picture, fitted to the screen; no zoom hint (people pinch by themselves)
   if (!img || img.complete) ready(); else img.addEventListener('load', ready, {once:true});
 }
-function closeZoom(){ hideZHint(); document.body.appendChild($('#zhint')); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
+function closeZoom(){ requestAnimationFrame(syncStartBar); $('#zoom').hidden = true; document.body.style.overflow = ''; zin.innerHTML = ''; Z.el = null; zp.clear(); if (lastFocus) lastFocus.focus(); }
 $('#zclose').addEventListener('click', closeZoom);
-$('#zplus').addEventListener('click', () => { hideZHint(); zSet(Z.s * 1.6, true); });
-$('#zout').addEventListener('click', () => { hideZHint(); zSet(Z.s / 1.6, true); });
+$('#zplus').addEventListener('click', () => { zSet(Z.s * 1.6, true); });
+$('#zout').addEventListener('click', () => { zSet(Z.s / 1.6, true); });
 window.addEventListener('resize', () => { if (Z.el) zFit(); });
 
 const zp = new Map(); let zg = null, zMoved = false, zTap = 0;
@@ -1044,7 +993,7 @@ zin.addEventListener('pointerdown', e => {
   if (!Z.el) return;
   if (!zp.size) zMoved = false;
   zp.set(e.pointerId, {x:e.clientX, y:e.clientY}); try { zin.setPointerCapture(e.pointerId); } catch(err) {}
-  hideZHint(); zStart();
+  zStart();
 });
 zin.addEventListener('pointermove', e => {
   if (!zp.has(e.pointerId) || !zg) return;
@@ -1072,7 +1021,7 @@ function zEnd(e){
 }
 zin.addEventListener('pointerup', zEnd);
 zin.addEventListener('pointercancel', zEnd);
-zin.addEventListener('wheel', e => { if (!Z.el) return; e.preventDefault(); hideZHint(); zSet(Z.s * Math.exp(-e.deltaY * 0.0022), false); }, {passive:false});
+zin.addEventListener('wheel', e => { if (!Z.el) return; e.preventDefault(); zSet(Z.s * Math.exp(-e.deltaY * 0.0022), false); }, {passive:false});
 
 /* ---------- keyboard: Esc closes zoom, left / right arrows change step ---------- */
 document.addEventListener('keydown', e => {

@@ -89,8 +89,9 @@ pieces read as separate tiles in both modes. (Rejected: a navy gap. It read as b
 Tapping a picture opens it full screen, showing the whole picture. Pinch, mouse wheel or + / − to zoom; drag to
 move; double tap to zoom in or back out; tap outside the picture to close.
 
-The first time it opens in a visit, a hint shows how: two finger marks spread and the picture zooms in, one mark
-moves right to left and the picture follows, the marks pinch and the picture zooms out. About 3 seconds a step.
+It opens fitted to the screen, with no zoom hint: people pinch and drag by themselves. (Rejected 18 Nov 2026: a
+three-step zoom hint on the first opening.) Nothing moves behind it: the demo, the swipe hint and the scroll arrow
+stop or hide while it is open.
 
 ### 4.5 Redaction in this guide
 
@@ -227,5 +228,6 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Round scroll arrow on every page that runs past the screen (touch only), in place of the `Next` bar on Start; the swipe hint is a thumb on its own | Owner's choice: an arrow alone is enough, and every long page needs it. Half a hand looked frightening. |
 | 18 Nov 2026 | Content pass: 13 → 11 steps. A2 + A3 merged; E2 merged into D3 (same screenshot, Revert to Draft as mark 3); E1 became D4; stage E removed. Repeats removed (B2, A2 and C2 leads; login only in B1; "check both weeks" in D1; "Requested" explained only in D3). Sentences shortened throughout | Aim: the least patience spent. A returning reader needs nothing; a new reader goes from the start; an unfamiliar reader jumps to one step, so each step stands alone. |
 | 18 Nov 2026 | Old D1 (check, then submit) merged into C2: 10 steps; D2–D4 became D1–D3 | D1 repeated C2 on the same screenshot. C2 uses the wider cut, which shows the Submit button. |
+| 18 Nov 2026 | No zoom hint in the enlarged view, on phones or computers; the picture opens fitted to the screen | Owner: people zoom with their own gestures; the hint only cost time. |
 | 18 Nov 2026 | B3 is an animation: the click switches the picture from week 1 to week 2 | Shows that the page changes and what changes. B3 stays its own step: it is needed only when the work days are in week 2, Help points to it, and C1 is already the longest step. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |
