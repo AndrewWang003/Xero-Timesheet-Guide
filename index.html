@@ -338,7 +338,7 @@ const CFG = {
   placeholder: 'A'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
-/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2048,1229],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2048,1229],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2048,2488],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2048,1143],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,358],"img/C2f.webp":[2048,1229],"img/C2n.webp":[920,854],"img/D1.jpg":[1600,768],"img/D1f.webp":[2048,1229],"img/D1n.webp":[920,978],"img/D2.jpg":[832,860],"img/D2f.webp":[2048,1229],"img/D3.webp":[1240,390],"img/D3f.webp":[1567,1080],"img/D3n.webp":[920,509],"img/D4.jpg":[1140,630],"img/D4f.webp":[2048,1229],"img/D4n.webp":[920,385]};/* SIZES:end */
+/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2048,1229],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2048,1229],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2048,2488],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2048,1143],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2048,1229],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2048,1229],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2048,1229],"img/D3n.webp":[920,385]};/* SIZES:end */
 const rate = t => `<span class="rate">${t}</span>`;
 const AR = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2 L10 7 L5 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const AL = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 L4 7 L9 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -424,48 +424,40 @@ const STEPS = [
       {no:1, h:'<b>Do not count</b> the gap between morning and afternoon work, or your own drive to the work site.'},
       {no:1, h:'<b>Rate not in the list?</b> Do not choose another one. Ask your supervisor.'}
     ]},
-  {id:'C2', g:2, t:'Add your kilometres', anim:true,
-    shot:{src:'img/C2.jpg', what:"Two lines: hours and kilometres, with a kilometre number above 24", marks:[{x:2.5,y:72.4,w:13.9,h:17.3,n:1,act:"click"},{x:2.5,y:53.1,w:41.9,h:16.3,n:2,act:"click"},{x:44.7,y:53.1,w:37.0,h:16.3,n:3,act:"edit",side:"r"}],
-      nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:36.5,w:31.8,h:9.5,n:1,act:"click"},{x:2.6,y:25.8,w:95.5,h:9.0,n:2,act:"click"},{x:2.9,y:77.6,w:84.4,h:9.0,n:3,act:"edit"}],
-      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.4,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"}]},
+  {id:'C2', g:2, t:'Add your kilometres, then submit', anim:true,
+    shot:{src:'img/C2.jpg', what:"Finished timesheet: hours and kilometres lines, and the Submit button", marks:[{x:3.0,y:68.7,w:13.9,h:8.0,n:1,act:"click"},{x:3.0,y:59.7,w:41.7,h:7.6,n:2,act:"click"},{x:44.9,y:59.7,w:36.8,h:7.6,n:3,act:"edit",side:"r"},{x:79.2,y:90.0,w:11.3,h:8.7,n:4,act:"click"}],
+      nsrc:'img/C2n.webp', nmarks:[{x:2.6,y:31.0,w:31.8,h:8.1,n:1,act:"click"},{x:2.6,y:21.9,w:95.5,h:7.6,n:2,act:"click"},{x:2.9,y:65.9,w:84.4,h:7.6,n:3,act:"edit"},{x:52.4,y:89.9,w:25.9,h:8.8,n:4,act:"click"}],
+      fsrc:'img/C2f.webp', fmarks:[{x:8.4,y:78.4,w:11.9,h:5.5,n:1,act:"click"},{x:8.4,y:72.3,w:35.8,h:5.2,n:2,act:"click"},{x:44.5,y:72.3,w:31.6,h:5.2,n:3,act:"edit",side:"r"},{x:73.9,y:93.1,w:9.7,h:6.0,n:4,act:"click"}]},
     pts:[
       {n:1, h:'<b>Use the empty second line</b> (one rate per line). No empty line? Click + Add another line.'},
       {n:2, h:`<b>Choose ${rate(CFG.kmRate)}.</b>`},
-      {n:3, h:'<b>Type your kilometres</b> for each day: one total per day.'},
-      '<b>Work them out</b> from your photos at the start and end of each job.',
-      {no:1, h:'<b>Do not count</b> your own drive to the work site.'}
+      {n:3, h:'<b>Type your kilometres</b> for each day: one total per day. Work them out from your photos at the start and end of each job.'},
+      {no:1, h:'<b>Do not count</b> your own drive to the work site.'},
+      '<b>Check</b> the fortnight ending date, and the hours and kilometres in both weeks.',
+      {n:4, h:'<b>Click Submit.</b>'}
     ]},
 
-  {id:'D1', g:3, t:'Check, then submit', anim:true,
-    shot:{src:'img/D1.jpg', what:"Finished timesheet with hours, kilometres and the Submit button", marks:[{x:0.7,y:1.9,w:36.1,h:5.3,n:1},{x:3.0,y:51.7,w:83.9,h:15.5,n:2,act:"edit"},{x:79.2,y:90.0,w:11.3,h:8.7,n:3,act:"click"}],
-      nsrc:'img/D1n.webp', nmarks:[{x:1.6,y:1.0,w:82.8,h:5.5,n:1},{x:2.6,y:25.2,w:95.5,h:16.1,n:2,act:"edit"},{x:2.9,y:59.7,w:96.0,h:16.1,g:2,act:"edit"},{x:52.4,y:89.6,w:25.9,h:9.0,n:3,act:"click"}],
-      fsrc:'img/D1f.webp', fmarks:[{x:6.4,y:32.5,w:31.1,h:3.6,n:1},{x:8.4,y:66.8,w:72.1,h:10.7,n:2,act:"edit"},{x:73.9,y:93.1,w:9.7,h:6.0,n:3,act:"click"}]},
-    pts:[
-      {n:1, h:'<b>The fortnight ending date</b> is right.'},
-      {n:2, h:'<b>Hours and kilometres</b> are right for each day. Check both weeks.'},
-      {n:3, h:'<b>Click Submit.</b>'}
-    ]},
-  {id:'D2', g:3, t:'Choose who approves it', anim:true,
-    shot:{src:'img/D2.jpg', what:"Submit timesheet window with the approver list open (names hidden)", marks:[{x:4.2,y:23.6,w:91.2,h:6.0,n:1,act:"click"}],
-      fsrc:'img/D2f.webp', fmarks:[{x:35.7,y:49.3,w:29.6,h:3.4,n:1,act:"click"}]},
+  {id:'D1', g:3, t:'Choose who approves it', anim:true,
+    shot:{src:'img/D1.jpg', what:"Submit timesheet window with the approver list open (names hidden)", marks:[{x:4.2,y:23.6,w:91.2,h:6.0,n:1,act:"click"}],
+      fsrc:'img/D1f.webp', fmarks:[{x:35.7,y:49.3,w:29.6,h:3.4,n:1,act:"click"}]},
     pts:[
       {n:1, h:'<b>Choose your supervisor:</b> the person who emailed you the job details, or the person they named.'},
       '<b>The list closes</b> when you choose. Then click <b>Submit</b> in this window.'
     ]},
-  {id:'D3', g:3, t:'Look for the green message', anim:true,
-    shot:{src:'img/D3.webp', what:"Green message: timesheet submitted. Status: Requested. Revert to Draft button", marks:[{x:1.0,y:3.3,w:98.4,h:17.4,n:1},{x:1.5,y:44.4,w:14.8,h:19.0,n:2},{x:79.8,y:81.8,w:11.6,h:15.4,n:3}],
-      nsrc:'img/D3n.webp', nmarks:[{x:1.7,y:2.1,w:97.9,h:17.6,n:1},{x:2.6,y:47.3,w:26.3,h:19.1,n:2},{x:64.3,y:81.7,w:20.6,h:15.5,n:3}],
-      fsrc:'img/D3f.webp', fmarks:[{x:11.0,y:37.8,w:77.9,h:6.3,n:1},{x:11.4,y:52.6,w:11.7,h:6.9,n:2},{x:73.4,y:93.0,w:9.2,h:5.6,n:3}]},
+  {id:'D2', g:3, t:'Look for the green message', anim:true,
+    shot:{src:'img/D2.webp', what:"Green message: timesheet submitted. Status: Requested. Revert to Draft button", marks:[{x:1.0,y:3.3,w:98.4,h:17.4,n:1},{x:1.5,y:44.4,w:14.8,h:19.0,n:2},{x:79.8,y:81.8,w:11.6,h:15.4,n:3}],
+      nsrc:'img/D2n.webp', nmarks:[{x:1.7,y:2.1,w:97.9,h:17.6,n:1},{x:2.6,y:47.3,w:26.3,h:19.1,n:2},{x:64.3,y:81.7,w:20.6,h:15.5,n:3}],
+      fsrc:'img/D2f.webp', fmarks:[{x:11.0,y:37.8,w:77.9,h:6.3,n:1},{x:11.4,y:52.6,w:11.7,h:6.9,n:2},{x:73.4,y:93.0,w:9.2,h:5.6,n:3}]},
     pts:[
       {n:1, h:'<b>Green message:</b> your timesheet was sent. You are done.'},
       {n:2, h:'<b>Status says Requested:</b> waiting for approval.'},
       {no:1, h:'<b>No green message?</b> It was not sent. Check the page and try again.'},
       {n:3, h:'<b>Made a mistake?</b> Click Revert to Draft, fix it, then submit again. Already approved? Tell your supervisor.'}
     ]},
-  {id:'D4', g:3, t:'Check the status', anim:true,
-    shot:{src:'img/D4.jpg', what:"Overview with the timesheet status", marks:[{x:0.7,y:1.9,w:10.7,h:10.8,n:1,act:"click"},{x:47.0,y:84.4,w:18.9,h:9.5,n:2}],
-      nsrc:'img/D4n.webp', nmarks:[{x:0.9,y:1.8,w:13.3,h:17.7,n:1,act:"click"},{x:58.3,y:75.8,w:23.5,h:15.6,n:2}],
-      fsrc:'img/D4f.webp', fmarks:[{x:13.6,y:29.4,w:4.8,h:4.4,n:1,act:"click"},{x:34.2,y:63.3,w:8.4,h:3.9,n:2}]},
+  {id:'D3', g:3, t:'Check the status', anim:true,
+    shot:{src:'img/D3.jpg', what:"Overview with the timesheet status", marks:[{x:0.7,y:1.9,w:10.7,h:10.8,n:1,act:"click"},{x:47.0,y:84.4,w:18.9,h:9.5,n:2}],
+      nsrc:'img/D3n.webp', nmarks:[{x:0.9,y:1.8,w:13.3,h:17.7,n:1,act:"click"},{x:58.3,y:75.8,w:23.5,h:15.6,n:2}],
+      fsrc:'img/D3f.webp', fmarks:[{x:13.6,y:29.4,w:4.8,h:4.4,n:1,act:"click"},{x:34.2,y:63.3,w:8.4,h:3.9,n:2}]},
     pts:[
       {n:1, h:'<b>Click Overview.</b>'},
       {n:2, h:'<b>Read the status</b> of your timesheet.'},
@@ -478,8 +470,8 @@ const STEPS = [
 const FAQ = [   // most common first
   {q:'I cannot find the right fortnight', a:'Choose the fortnight that has your work days.', to:'B2'},
   {q:'The kilometre box only takes up to 24', a:'You are in the Xero Me phone app. Use a web browser.', to:'start'},
-  {q:'I made a mistake after submitting', a:'Revert to Draft, if it is not approved yet.', to:'D3'},
-  {q:'I am not sure it was sent', a:'Look for the green message, then check Overview.', to:'D4'},
+  {q:'I made a mistake after submitting', a:'Revert to Draft, if it is not approved yet.', to:'D2'},
+  {q:'I am not sure it was sent', a:'Look for the green message, then check Overview.', to:'D3'},
   {q:'I missed the Thursday deadline', a:'Submit as soon as you can.', to:'start'},
   {q:'I did not get the invite email', a:'Check junk mail, or ask your supervisor.', to:'A1'},
   {q:'My work days are in two weeks', a:'Click the arrow to switch between week 1 and week 2.', to:'B3'},

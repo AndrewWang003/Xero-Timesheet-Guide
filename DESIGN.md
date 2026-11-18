@@ -17,16 +17,16 @@ The reader often has the guide on a phone and Xero open on a computer, and comes
 
 ## 2. Structure
 
-Start page, 11 steps in 4 stages, Help page.
+Start page, 10 steps in 4 stages, Help page.
 
 | Stage | Steps |
 |---|---|
 | Start | Three things to know before logging in, then the question "Used Xero for Matrix before?" |
 | A · First time only | A1 Open the invite email · A2 Set up your account (create the login, then personal, tax, super and bank details) |
 | B · New timesheet | B1 Log in and add a timesheet · B2 Choose the fortnight · B3 Go to the week you worked (animated) |
-| C · Hours and km | C1 Enter your hours · C2 Add your kilometres |
-| D · Submit | D1 Check, then submit · D2 Choose who approves it · D3 Look for the green message (and how to fix a mistake) · D4 Check the status |
-| Help | Common problems. Each one opens the step that fixes it. Opened from the `Help` button at the top right on every page, and by `Next` on D4. It is not in the step strip. |
+| C · Hours and km | C1 Enter your hours · C2 Add your kilometres, then submit (check both weeks, click Submit) |
+| D · Submit | D1 Choose who approves it · D2 Look for the green message (and how to fix a mistake) · D3 Check the status |
+| Help | Common problems. Each one opens the step that fixes it. Opened from the `Help` button at the top right on every page, and by `Next` on D3. It is not in the step strip. |
 
 - The Start page asks "Used Xero for Matrix before?" with two buttons. A swipe left (or the right arrow key) on
   Start counts as "No, first time" and opens A1: that path shows every step, so nobody misses anything. Returning
@@ -99,9 +99,9 @@ Everything is covered on the original, so the close-up, the wide cut and the who
 - The account initials at the top right: painted over in the colour of the bar around them.
 - Approver list (D2): the owner's own redaction; one bar lengthened so at most two letters show.
 - Other workers' earnings rates (C1): the amount is covered, and the name beyond the width of the word "Manual:".
-- This fortnight's hours (D4, and behind the B2 window), and the totals and hours behind the D2 window: grey blocks.
-- Left visible on purpose, for the owner to review: the example hours and kilometres (C2, D1, D3), the
-  fortnightly totals in B3, the iPad status bar and address in D3, "Next Payment Date".
+- This fortnight's hours (D3, and behind the B2 window), and the totals and hours behind the D2 window: grey blocks.
+- Left visible on purpose, for the owner to review: the example hours and kilometres (C2, D2), the
+  fortnightly totals in B3, the iPad status bar and address in D2, "Next Payment Date".
 
 ## 5. The pointer demo
 
@@ -117,7 +117,7 @@ A pointer visits mark 1, 2, 3. The visited box and its text point light up.
 - **B3 changes the page.** B3 shows week 1. After the demo clicks the arrow, the same cut of week 2 fades in on top, and
   Week ending and the dates pulse amber: only they change. When the demo ends, week 1 comes back. Set with `after:` on
   the step (the week 2 pictures); `build_shots.py` makes them from the same crop of the second screenshot.
-- **A mark the reader only needs sometimes is an eye, never a click** (D3 mark 3, Revert to Draft), so the demo
+- **A mark the reader only needs sometimes is an eye, never a click** (D2 mark 3, Revert to Draft), so the demo
   never presses a button the normal path must not press.
 - It plays by itself the first time a step is opened in a visit. `Play` replays it.
 - It starts, and `Play` is switched on, only when the picture has downloaded and has its place on the page.
@@ -226,5 +226,6 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Swipe on Start = "first time" (A1); swipe hint plays on Start; `Next` bar on Start while the question is off screen | The owner wants the swipe taught on the first page. A1 is the safe path. On the owner's phone the question was just below the screen. (Rejected: putting the question first, readers would skip the three rules.) |
 | 18 Nov 2026 | Round scroll arrow on every page that runs past the screen (touch only), in place of the `Next` bar on Start; the swipe hint is a thumb on its own | Owner's choice: an arrow alone is enough, and every long page needs it. Half a hand looked frightening. |
 | 18 Nov 2026 | Content pass: 13 → 11 steps. A2 + A3 merged; E2 merged into D3 (same screenshot, Revert to Draft as mark 3); E1 became D4; stage E removed. Repeats removed (B2, A2 and C2 leads; login only in B1; "check both weeks" in D1; "Requested" explained only in D3). Sentences shortened throughout | Aim: the least patience spent. A returning reader needs nothing; a new reader goes from the start; an unfamiliar reader jumps to one step, so each step stands alone. |
+| 18 Nov 2026 | Old D1 (check, then submit) merged into C2: 10 steps; D2–D4 became D1–D3 | D1 repeated C2 on the same screenshot. C2 uses the wider cut, which shows the Submit button. |
 | 18 Nov 2026 | B3 is an animation: the click switches the picture from week 1 to week 2 | Shows that the page changes and what changes. B3 stays its own step: it is needed only when the work days are in week 2, Help points to it, and C1 is already the longest step. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |

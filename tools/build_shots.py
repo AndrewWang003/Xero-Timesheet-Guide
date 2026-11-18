@@ -100,20 +100,18 @@ R['B3'].update(fmarks=build('B3f.webp',[('B4-1.png',(0,0)+load('B4-1.png').size)
 rate=(430,838,1262,935); cells=(1278,1036,2034,1108)
 step('C1',[('C2.jpeg',(370,400,2420,1290))],[M(0,rate,1,act='click'),M(0,cells,2,act='edit')],
      [('C2.jpeg',(400,405,1320,1110)),('C2.jpeg',(1250,905,2170,1200))],[M(0,rate,1,act='click'),M(1,cells,2,act='edit')])
-al=(215,1205,520,1290); kr=(215,1110,1132,1190); kc=(1138,1110,1948,1190)
-step('C2',[('D1.png',(160,850,2350,1340))],[M(0,al,1,act='click'),M(0,kr,2,act='click'),M(0,kc,3,'r',act='edit')],
-     [('D1.png',(190,880,1150,1310)),('D1.png',(1110,880,2070,1310))],[M(0,al,1,act='click'),M(0,kr,2,act='click'),M(1,kc,3,act='edit')])
-ti=(165,500,960,556); sub=(1893,1430,2142,1522)
-step('D1',[('D1.png',(150,480,2350,1536))],[M(0,ti,1),M(0,(215,1026,2060,1190),2,act='edit'),M(0,sub,3,act='click')],
-     [('D1.png',(150,490,1110,570)),('D1.png',(190,880,1150,1200)),('D1.png',(1110,880,2070,1280)),('D1.png',(1390,1410,2350,1536))],
-     [M(0,ti,1),M(1,(215,1026,1132,1190),2,act='edit'),M(2,(1138,1026,2060,1190),g=2,act='edit'),M(3,sub,3,act='click')])
-step('D2',[('D2.png',(880,555,1712,1415))],[M(0,(915,758,1674,810),1,act='click')],ww=832)   # the owner's redaction, plus the one bar above
-# D3: green message, status, and (for a mistake) Revert to Draft. Mark 3 is only shown (eye): the demo must not press it.
+# C2: the kilometre line, then the check and Submit (the old D1 step), on the same screenshot
+al=(215,1205,520,1290); kr=(215,1110,1132,1190); kc=(1138,1110,1948,1190); sub=(1893,1430,2142,1522)
+step('C2',[('D1.png',(150,480,2350,1536))],[M(0,al,1,act='click'),M(0,kr,2,act='click'),M(0,kc,3,'r',act='edit'),M(0,sub,4,act='click')],
+     [('D1.png',(190,880,1150,1310)),('D1.png',(1110,880,2070,1310)),('D1.png',(1390,1410,2350,1536))],
+     [M(0,al,1,act='click'),M(0,kr,2,act='click'),M(1,kc,3,act='edit'),M(2,sub,4,act='click')])
+step('D1',[('D2.png',(880,555,1712,1415))],[M(0,(915,758,1674,810),1,act='click')],ww=832)   # the owner's redaction, plus the one bar above
+# D2: green message, status, and (for a mistake) Revert to Draft. Mark 3 is only shown (eye): the demo must not press it.
 gm=(172,408,1392,476); stt=(178,568,362,642); rv=(1150,1004,1294,1064)
-step('D3',[('D3.JPG',(160,395,1400,665)),('D3.JPG',(160,985,1400,1075))],[M(0,gm,1),M(0,stt,2),M(1,rv,3)],
+step('D2',[('D3.JPG',(160,395,1400,665)),('D3.JPG',(160,985,1400,1075))],[M(0,gm,1),M(0,stt,2),M(1,rv,3)],
      [('D3.JPG',(160,400,860,482)),('D3.JPG',(160,490,860,660)),('D3.JPG',(700,985,1400,1075))],[M(0,gm,1),M(1,stt,2),M(2,rv,3)],ww=1240)
 ov=(348,452,470,520); pe=(876,972,1092,1032)
-step('D4',[('E1.png',(340,440,1480,1070))],[M(0,ov,1,act='click'),M(0,pe,2)],
+step('D3',[('E1.png',(340,440,1480,1070))],[M(0,ov,1,act='click'),M(0,pe,2)],
      [('E1.png',(340,445,1260,525)),('E1.png',(340,790,1260,1065))],[M(0,ov,1,act='click'),M(1,pe,2)],ww=1140)
 json.dump(R,open(os.path.join(HERE,'shots.json'),'w'),indent=1)
 print('wrote', len(R), 'steps to', OUT, 'and tools/shots.json')
