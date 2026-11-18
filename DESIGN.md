@@ -40,6 +40,10 @@ Start page, 10 steps in 4 stages, Help page.
   visit only.
 - A Xero account from another job does not count: the person still has to accept the Matrix invite.
 - If two steps happen on the same Xero page, they are one step (B1).
+- **Top bar, right side:** `Help`, then `Aa` (text size, GUIDE-PRINCIPLES.md 4.8), then the theme button. Text size
+  keeps the top bar, the step strip, screenshots and their marks and badges, the picture viewer and the hints at
+  their size; everything in the step cards scales. At 320 px the title in the top bar is cut short with "…" (it was
+  already cut before `Aa` was added; the step code beside it stays readable).
 
 ## 3. Words used in this guide
 
@@ -239,3 +243,4 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | No zoom hint in the enlarged view, on phones or computers; the picture opens fitted to the screen | Owner: people zoom with their own gestures; the hint only cost time. |
 | 18 Nov 2026 | B3 is an animation: the click switches the picture from week 1 to week 2 | Shows that the page changes and what changes. B3 stays its own step: it is needed only when the work days are in week 2, Help points to it, and C1 is already the longest step. |
 | 18 Nov 2026 | One way into Help: a `Help` text button with an amber outline at the top right; Help removed from the step strip | Two Help entries were the same. The top button is seen on every page; a lone "?" did not invite a tap. (Rejected: a lifebuoy icon beside the word.) |
+| 18 Nov 2026 | Text-size control `Aa` at the top right (A− / four dots / A+; 90, 100, 115, 130 %), shared with the Dash Cam guide; not remembered | Owner: readers need bigger text. A panel keeps the top bar to one extra button at 320 px; four sizes because smaller than 90 % hurts reading. |
