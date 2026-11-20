@@ -12,8 +12,9 @@ Read [`GUIDE-PRINCIPLES.md`](GUIDE-PRINCIPLES.md) (shared by all Matrix guides),
    run it and `tools/apply_marks.py`. Run `apply_marks.py` after any picture changes.
 5. **Privacy.** This repository is public. Never commit an original screenshot. Redact on the original, before cropping.
 6. **Do not copy Xero's web pages** (HTML, CSS, logo). Screenshots only.
-7. **Shared rules live in GUIDE-PRINCIPLES.md**, and the same file is in every guide repository. If you change a
-   shared rule, change it in all of them in the same piece of work.
+7. **Shared rules live in GUIDE-PRINCIPLES.md**, and the same file is in every guide repository. Code shared by
+   all guides sits between `SHARED:` markers in `index.html`. If you change a shared rule or shared code, change it in
+   all guides in the same piece of work: `python3 tools/shared.py copy ../other-guide`, then `check`.
 8. **Report honestly.** Say what you tested, what you only reasoned about, and what you could not test. Use the
    checks at the end of GUIDE-PRINCIPLES.md.
 9. **Keep the docs true.** If you change structure, behaviour or a rule, update DESIGN.md and add a line to its

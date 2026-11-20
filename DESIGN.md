@@ -114,32 +114,48 @@ Everything is covered on the original, so the close-up, the wide cut and the who
 - Left visible on purpose, for the owner to review: the example hours and kilometres (C2, D2), the
   fortnightly totals in B3, the iPad status bar and address in D2, "Next Payment Date".
 
-## 5. The pointer demo
+## 5. Highlight: points and boxes together
 
-A pointer visits mark 1, 2, 3. The visited box and its text point light up.
+Each numbered point in the text and its box on the picture (box, number in the gutter) light up together; the other
+boxes fade. This is how the reader learns which box a point means. **There is no pointer** (owner's decision,
+20 Nov 2026: the eye and the hand repeated what the numbers and the verbs already say, and cost the reader time).
 
-| What the reader does | Pointer | How it moves |
-|---|---|---|
-| Only check something | Eye | Sits on the bottom edge of the box, blinks, does not cover what is checked |
-| Type or change something | Hand, index finger | Inside the box, moves a little from side to side |
-| Click | Hand, index finger | Finger tip on the middle of the button; presses twice, with a ring |
+| How | What lights up |
+|---|---|
+| `Play` (tapped or clicked) | Point 1 and its box, then 2, then 3, with time to read each (about 2 s). Then everything goes back to normal. |
+| Mouse over a numbered point, or over a box or number on the picture | That point and its box, while the mouse stays there. |
+| Tap or click on a numbered point | That point and its box, until the next tap or click. The same point again, or anywhere else: off. |
+| Tap hint (touch screens, once per visit, by itself) | See below. |
 
-- It appears on mark 1. It does not fly in from elsewhere.
-- **B3 changes the page.** B3 shows week 1. After the demo clicks the arrow, the same cut of week 2 fades in on top, and
-  Week ending and the dates pulse amber: only they change. When the demo ends, week 1 comes back. Set with `after:` on
-  the step (the week 2 pictures); `build_shots.py` makes them from the same crop of the second screenshot.
-- **A mark the reader only needs sometimes is an eye, never a click** (D2 mark 3, Revert to Draft), so the demo
-  never presses a button the normal path must not press.
-- It plays by itself the first time a step is opened in a visit. `Play` replays it.
-- It starts, and `Play` is switched on, only when the picture has downloaded and has its place on the page.
-- The eye and hand are amber with a navy outline in both modes. (Rejected: a navy hand in day mode. Rejected: a
-  hand with the middle finger out. It must be the index finger.)
-- **A click mark must be drawn tight around the one button to press**, because the finger lands on the middle of the
-  box. Two things to press under one number get two boxes (the second with `g`). If the button cannot be the box,
-  give the mark `tx`, `ty`: the point to press, in % of the picture.
-  (Found 18 Nov 2026: A2 mark 3 covered the tick box, Create and Cancel, and the finger pressed Cancel.)
+- **`Play` never plays by itself.** It switches on when the picture has downloaded and has its place on the page.
+- **Tap hint** (owner's request, 20 Nov 2026: readers did not find that a point can be tapped). The first time in a
+  visit that a step with numbered points is on the screen, a see-through dot the size of a fingertip appears in the
+  middle of point 1's text, taps it twice, 1 s apart (closer taps look like a double tap), each tap sending out an amber
+  ring, and point 1 and its box light up; after about 3.5 s all of it goes. No caption.
+  - **Touch screens only.** On a computer a mouse over a point already lights it up, so a click hint would teach
+    something the reader does not need (owner's decision). A click on a point still locks the highlight on a computer,
+    with no hint for it.
+  - It taps the text, not the number, because the whole point can be tapped.
+  - It waits for the picture, for point 1 to be fully on the screen below the top bar, and for the other hints to
+    finish (the page swipe hint, the strip hint): never two at once.
+  - Any touch, click or key stops it at once. Stopped before its first tap, it tries again 1.5 s later; once it has
+    tapped, or the reader has tapped or clicked a point themselves, it does not come back in this visit (nothing is
+    stored: a new visit shows it again).
+  - The dot is the text colour at low strength (navy by day, cream at night), so the number shows through it.
+- Any hover or tap on a point stops `Play`; it does not start again by itself.
+- A click or tap on the picture still opens the picture viewer: the boxes let clicks through, so the page finds the box
+  under the mouse by its position.
+- **Touch: the page scrolls to the box only if the box and the tapped point both fit on the screen.** Otherwise
+  nothing moves, so the reader never loses the point they tapped; the box is already lit when they scroll up to it.
+- **B3 changes the page.** B3 shows week 1. `Play` lights the arrow (the box with `act:'click'`), then the same cut of
+  week 2 fades in on top, and Week ending and the dates pulse amber: only they change. Then it lights mark 2 on week 2.
+  When `Play` ends, week 1 comes back. Set with `after:` on the step (the week 2 pictures); `build_shots.py` makes them
+  from the same crop of the second screenshot.
+- `act` on a mark (`'click'`, `'edit'`) is kept in the data. Today only B3 uses it (the click that changes the page).
 - `Play` is a secondary button: amber outline and an amber play disc, not filled, so `Next` stays the one main
   button. Most readers never need `Play`.
+- Earlier (17 to 20 Nov 2026) a pointer showed the kind of action: an eye for "check", a hand for "type" and a
+  pressing hand for "click", and the demo played by itself on the first visit to a step. Removed on 20 Nov 2026.
 
 ## 6. How the page is built
 
@@ -147,7 +163,7 @@ All content is data near the top of the script in `index.html`:
 
 | Name | What it holds |
 |---|---|
-| `CFG` | Values that change: the hourly earnings rate name, the kilometre rate name, the login address, the placeholder look (`'A'`, chosen by the owner; `'B'` and `'C'` are kept as options). |
+| `CFG` | Values that change: the hourly earnings rate name, the kilometre rate name, the login address. |
 | `SIZES` | The pixel size of every picture in `img/`, so its space is kept before it downloads. Written by `tools/apply_marks.py`. |
 | `STAGES` | Stage letters and names. |
 | `STEPS` | One object per step (below). |
@@ -162,14 +178,13 @@ A step:
         nsrc:'img/C2n.webp', nmarks:[…]},               // optional phone close-up
   pts:[ {n:1, h:'…'},             // numbered point = mark 1
         '…',                      // dash point
-        {no:1, h:'…'} ],          // coral "do not" point
-  box:{c:'ok', h:'Done'}}         // optional box
+        {no:1, h:'…'} ]}          // coral "do not" point
+// optional: after:{src, nsrc} = the picture that fades in after the demo's click (B3)
 ```
 
-A mark: `{x, y, w, h, n, side, g, act, tx, ty}`. Position and size are in % of that picture.
+A mark: `{x, y, w, h, n, side, g, act}`. Position and size are in % of that picture.
 `n` is the badge number (leave out for a box with no badge). `g` joins a badge-less box to mark `g`.
-`side:'r'` puts the badge in the right gutter. `act` is `'click'`, `'edit'`, or left out for "only check".
-`tx`, `ty` (optional) is where the pointer goes, in % of the picture; without them it goes to the middle of the box.
+`side:'r'` puts the badge in the right gutter. `act` is `'click'`, `'edit'`, or left out for "only check" (section 5).
 
 ## 7. Making the pictures
 
@@ -246,3 +261,8 @@ Not decided. Do not "fix" them by guessing.
 | 18 Nov 2026 | Text-size control `Aa` at the top right (A− / four dots / A+; 90, 100, 115, 130 %), shared with the Dash Cam guide; not remembered | Owner: readers need bigger text. A panel keeps the top bar to one extra button at 320 px; four sizes because smaller than 90 % hurts reading. |
 | 18 Nov 2026 | Phone / browser Back button goes to the page before: each page change adds a history entry (was replaced); the enlarged view closes first | People press the phone's Back button by habit; it used to leave the guide. |
 | 18 Nov 2026 | Fixes: a touch the system cancels no longer closes the enlarged view; the demo clears only its own marks inside the page and orders marks as numbers; rotating across 900 px keeps the reading height; works on Safari before iOS 14 | Found in a code review. |
+| 18 Nov 2026 | Code tidy-up: placeholder looks B and C, and the unused `box` / `todo` step fields removed; demo classes renamed `demo-cur`, `demo-on`, `demo-dim`; code shared with the Dash Cam guide marked as `SHARED` blocks (tokens, fonts, theme switch, swipe hint, text size), checked with `tools/shared.py` | Easier to read and change; shared code stays the same in both guides. The theme button now has the Dash Cam icons and a tooltip. |
+| 20 Nov 2026 | Pointer (eye / hand) removed; nothing plays by itself; points and boxes light up together on `Play`, on a mouse hover (point or box) and on a tap on a point | Owner: the reader does not need an automatic demo; the highlight alone shows which box a point means. |
+| 20 Nov 2026 | Tap hint: once per visit, a see-through dot taps point 1 twice and its box lights up; a mouse click on a point now locks the highlight, like a tap | Owner: readers did not find the linked highlight. The hint shows a click on computers too, so a click must work there. |
+| 20 Nov 2026 | Tap hint on touch screens only; the dot taps the middle of the point's text, two taps 1 s apart | Owner: on computers hover already shows it; the whole point is tappable, not only the number; closer taps looked like a double tap. |
+| 20 Nov 2026 | Start page: "Use a web browser, not the Xero Me phone app"; any browser works, phone included (was "computer or iPad browser") | Owner: only the app must be avoided; the old title read as if a phone browser were wrong. |

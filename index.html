@@ -5,41 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="How to submit your hours and kilometres in Xero.">
 <title>Xero Timesheet Guide</title>
+<!-- SHARED:fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@600;800&family=Overpass+Mono:wght@600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<!-- /SHARED:fonts -->
 <style>
-:root{--fs:1}
-header,.phint,.shot,.badge,.load,.zoom,.swipehint{--fs:1}   /* text that keeps its size: top bar, pictures, hints */
-/* Same tokens, fonts and card style as the Dash Cam Drive Guide.
-   Amber = do this / where to click. Coral = don't / attention. Sage = done / correct. */
+/* SHARED:tokens */
+/* Colour tokens, fonts and base rules: the same in every Matrix guide (GUIDE-PRINCIPLES.md 4.1, 4.2; tools/shared.py).
+   --fs = text size (4.8). A guide's own tokens come after this block. */
 :root{
-  --bg:#F6F1E7; --surface:#FFFDF8; --ink:#141B3C; --muted:#5B6078; --line:#E2D9C8;
+  --fs:1;
+  --bg:#F6F1E7; --surface:#FFFDF8; --ink:#141B3C; --muted:#5B6078; --line:#E2D9C8; --tint:#EFE7D7;
   --brand:#F2A93B; --brand-ink:#141B3C; --amber:#F2A93B; --coral:#D94A22; --sage:#5E8F88;
-  --ok-bg:#E4EFEC; --bad-bg:#FBE7E0; --tint:#EFE7D7;
-  /* the same in both themes */
-  --navy:#141B3C; --cream:#F3EBDD; --white:#FFFDF8; --shot-bg:#FFFFFF;
-  --amber-soft:rgba(242,169,59,.24); --amber-ring:rgba(242,169,59,.4); --amber-dot:rgba(242,169,59,.88);
-  --scrim:rgba(10,14,34,.92); --shade:rgba(0,0,0,.45);
+  --ok-bg:#E4EFEC; --bad-bg:#FBE7E0;
   --f-display:"Overpass","Arial Narrow",Arial,sans-serif;
   --f-body:"Atkinson Hyperlegible","Segoe UI",Roboto,Arial,sans-serif;
   --f-mono:"Overpass Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0E1228; --surface:#171D3A; --ink:#F3EBDD; --muted:#A9AEC6; --line:#2B3359;
+  --bg:#0E1228; --surface:#171D3A; --ink:#F3EBDD; --muted:#A9AEC6; --line:#2B3359; --tint:#1F2647;
   --brand:#F2A93B; --brand-ink:#141B3C; --coral:#FF7A52; --sage:#7DB3AB;
-  --ok-bg:#1C3537; --bad-bg:#3D2320; --tint:#1F2647; color-scheme:dark }}
+  --ok-bg:#1C3537; --bad-bg:#3D2320; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#0E1228; --surface:#171D3A; --ink:#F3EBDD; --muted:#A9AEC6; --line:#2B3359;
+  --bg:#0E1228; --surface:#171D3A; --ink:#F3EBDD; --muted:#A9AEC6; --line:#2B3359; --tint:#1F2647;
   --brand:#F2A93B; --brand-ink:#141B3C; --coral:#FF7A52; --sage:#7DB3AB;
-  --ok-bg:#1C3537; --bad-bg:#3D2320; --tint:#1F2647; color-scheme:dark }
+  --ok-bg:#1C3537; --bad-bg:#3D2320; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+/* /SHARED:tokens */
+header,.phint,.shot,.badge,.load,.zoom,.swipehint{--fs:1}   /* text that keeps its size: top bar, pictures, hints */
+/* Same tokens, fonts and card style as the Dash Cam Drive Guide.
+   Amber = do this / where to click. Coral = don't / attention. Sage = done / correct. */
+:root{   /* Timesheet's own tokens: the same in both themes */
+  --navy:#141B3C; --cream:#F3EBDD; --white:#FFFDF8; --shot-bg:#FFFFFF;
+  --amber-soft:rgba(242,169,59,.24); --amber-ring:rgba(242,169,59,.4); --amber-dot:rgba(242,169,59,.88);
+  --scrim:rgba(10,14,34,.92); --shade:rgba(0,0,0,.45);
+}
 
 /* demo pointer (hand / eye) */
 :root{--cur-f:#F2A93B;--cur-o:#141B3C;--cur-l:#B9791C}   /* amber with a navy outline, in both modes */
 .cf{fill:var(--cur-f)} .co{fill:var(--cur-o)} .cl{fill:var(--cur-l)}
 
-*{box-sizing:border-box}
-[hidden]{display:none!important}
 html{scroll-padding-top:150px}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:calc(17px * var(--fs));line-height:1.5;
   padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
@@ -51,7 +59,6 @@ main,.peek{display:flex;flex-direction:column;gap:14px}
 #view{touch-action:pan-y pinch-zoom}
 .peek{position:absolute;left:0;top:0;width:100%;pointer-events:none}
 button{font:inherit;color:inherit}
-button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 
 /* sticky header: top bar + step strip */
 header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line);transform:translateZ(0)}
@@ -130,11 +137,6 @@ ul.pts li.num::before{content:attr(data-n);left:0;top:.08em;width:22px;height:22
   font-family:var(--f-display);font-weight:800;font-size:calc(14px * var(--fs));line-height:1.2;padding:5px 12px 3px}
 .inl svg{width:10px;height:10px}
 .rate{font-family:var(--f-mono);font-weight:600;font-size:calc(15px * var(--fs));background:var(--tint);border-radius:6px;padding:1px 6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.box{border-radius:12px;padding:12px 14px;margin:0;font-size:calc(16px * var(--fs))}
-.box b{display:block;font-family:var(--f-display);font-weight:800}
-.box.warn{background:var(--bad-bg);border-left:4px solid var(--coral)}
-.box.ok{background:var(--ok-bg);border-left:4px solid var(--sage)}
-.box.todo{border:1.5px dashed var(--coral);color:var(--coral);font-family:var(--f-display);font-weight:800;font-size:calc(14px * var(--fs))}
 .note{font-size:calc(15px * var(--fs));color:var(--muted);margin:0}
 
 /* screenshot frame with drawn marks */
@@ -153,28 +155,13 @@ ul.pts li.num::before{content:attr(data-n);left:0;top:.08em;width:22px;height:22
 .pic.ready .load{opacity:0;visibility:hidden}
 .ph{position:relative;display:block;aspect-ratio:16/10}
 .ph .load{position:absolute}
-.ld-cap{font-family:var(--f-display);font-weight:800;font-size:min(13px,11cqh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.ld-code{font-family:var(--f-mono);font-weight:600;color:var(--ink)}
-/* A: skeleton of a screen. The bars keep growing and shrinking one after another, and a light sweeps across: still loading. */
+/* Picture placeholder: skeleton of a screen (look A, chosen by the owner). The bars keep growing and shrinking one after another, and a light sweeps across: still loading. */
 .ld-a{position:absolute;inset:0;padding:6% 7%;display:flex;flex-direction:column;justify-content:center;gap:min(12px,9cqh)}
 .ld-a i{display:block;height:min(14px,10cqh);border-radius:6px;background:var(--line);transform-origin:left center;animation:bar 1.6s ease-in-out infinite}
 .ld-a i:nth-child(1){width:55%} .ld-a i:nth-child(2){width:88%;animation-delay:.2s} .ld-a i:nth-child(3){width:72%;animation-delay:.4s} .ld-a i:nth-child(4){width:38%;background:var(--amber-soft);animation-delay:.6s}
 @keyframes bar{0%,100%{transform:scaleX(.55);opacity:.55}50%{transform:scaleX(1);opacity:1}}
 .ld-a::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,var(--surface) 50%,transparent 70%);opacity:.6;transform:translateX(-100%);animation:sheen 1.8s ease-in-out infinite}
 @keyframes sheen{to{transform:translateX(100%)}}
-/* B: flat clip-art of a browser window with a picture in it */
-.ld-b{display:flex;flex-direction:column;align-items:center;gap:min(8px,5cqh);height:100%;justify-content:center}
-.ld-b svg{height:min(110px,62cqh);width:auto;display:block}
-.ld-b .w{fill:var(--surface)} .ld-b .f{fill:var(--line)} .ld-b .d{fill:var(--muted)} .ld-b .h{fill:var(--sage)} .ld-b .h2{fill:var(--muted);opacity:.55} .ld-b .s{fill:var(--amber)}
-.ld-b .s{animation:pulse 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-@keyframes pulse{50%{transform:scale(1.25);opacity:.6}}
-/* C: step code and three dots */
-.ld-c{display:flex;flex-direction:column;align-items:center;gap:min(8px,5cqh)}
-.ld-c .ld-code{font-size:min(34px,26cqh);line-height:1}
-.ld-c .dots{display:flex;gap:min(8px,4cqh)}
-.ld-c .dots i{width:min(10px,7cqh);height:min(10px,7cqh);border-radius:50%;background:var(--amber);animation:dot 1.2s ease-in-out infinite}
-.ld-c .dots i:nth-child(2){animation-delay:.2s} .ld-c .dots i:nth-child(3){animation-delay:.4s}
-@keyframes dot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 .mark{position:absolute;border:2.5px solid var(--amber);border-radius:6px;pointer-events:none}
 .mark.no{border-color:var(--coral)}
 .badge{position:absolute;z-index:2;width:22px;height:22px;border-radius:50%;background:var(--amber);color:var(--navy);
@@ -194,32 +181,31 @@ ul.pts li.num::before{content:attr(data-n);left:0;top:.08em;width:22px;height:22
 .play .pb{fill:var(--brand)} .play .pi{fill:var(--brand-ink)}
 .play:disabled{opacity:.4;cursor:default}      /* picture not downloaded yet */
 
-/* demo: a pointer visits mark 1, 2, 3. Eye = check this. Hand = change or type here. Hand that presses = click.
-   The visited box and its text point light up. */
-.cur{position:absolute;left:0;top:0;width:0;height:0;z-index:3;pointer-events:none;opacity:0;
-  transition:transform .8s cubic-bezier(.45,0,.2,1),opacity .3s}
-.cur .g{position:absolute;display:none}
-.cur .hand{left:-11px;top:-2px;width:34px;height:42px}     /* index finger tip sits on the target point */
-.cur .eye{left:-19px;top:-13px;width:38px;height:27px}     /* eye centre sits on the target point */
-.cur svg{width:100%;height:100%;display:block;overflow:visible}
-.cur.k-look .eye,.cur.k-edit .hand,.cur.k-click .hand{display:block}
-.cur .hand svg{transition:transform .18s;transform-origin:38% 10%}
-.cur.press .hand svg{transform:scale(.84)}
-.cur i{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;border:3px solid var(--amber);opacity:0}
-.cur.press i{animation:ring .45s ease-out}
-@keyframes ring{0%{opacity:.95;transform:scale(.3)}100%{opacity:0;transform:scale(1.6)}}
-.cur.k-look .eye svg{animation:blink 1.7s ease-in-out infinite}
-@keyframes blink{0%,40%,60%,100%{transform:scaleY(1)}50%{transform:scaleY(.12)}}
-.cur.k-edit .hand svg{animation:typing .55s ease-in-out infinite}
-@keyframes typing{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+/* Highlight: a numbered point and its box on the picture light up together, the other boxes fade.
+   Play steps through them (1, 2, 3); a hover (mouse) or a tap on a point (touch) lights up one pair. No pointer. */
 .mark{transition:opacity .25s,background .25s,box-shadow .25s}
-.mark.dim{opacity:.25}
-.mark.on{background:var(--amber-soft);box-shadow:0 0 0 3px var(--amber-ring)}
+.mark.demo-dim{opacity:.25}
+.mark.demo-on{background:var(--amber-soft);box-shadow:0 0 0 3px var(--amber-ring)}
 .badge{transition:opacity .25s,transform .25s}
-.badge.dim{opacity:.3}
-.badge.on{transform:scale(1.25)}
+.badge.demo-dim{opacity:.3}
+.badge.demo-on{transform:scale(1.25)}
 ul.pts li{transition:background .25s,box-shadow .25s;border-radius:6px}
-ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)}   /* amber tint: visible on the cream card and on the night card */
+ul.pts li.demo-on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)}   /* amber tint: visible on the cream card and on the night card */
+@media (hover: hover){ ul.pts li.num{cursor:default} }
+ul.pts li.num{-webkit-tap-highlight-color:transparent}
+/* tap hint (touch screens only): the first time a step with numbered points is on the screen in a visit, a dot taps the
+   middle of point 1 twice and its box lights up: a tap on a point shows its box. The script places it. */
+/* A see-through dot the size of a fingertip, made from the text colour (navy by day, cream at night), so the number
+   under it still shows; each tap sends out an amber ring. */
+.taphint{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;
+  background:color-mix(in srgb, var(--ink) 28%, transparent);border:2px solid color-mix(in srgb, var(--ink) 50%, transparent);
+  opacity:0;pointer-events:none;z-index:3;transition:opacity .25s}
+.taphint.show{opacity:1}
+.taphint.press{animation:tapPress .5s ease}
+.taphint::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--amber);opacity:0}
+.taphint.press::after{animation:tapRing .6s ease-out}
+@keyframes tapPress{0%{transform:scale(1)}40%{transform:scale(.78)}100%{transform:scale(1)}}
+@keyframes tapRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.1)}}
 
 /* choice buttons (start page) */
 .choices{display:flex;flex-direction:column;gap:10px}
@@ -263,25 +249,30 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
 .zoom .zin{flex:1;position:relative;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:grab}
 .zoom .zin .shot{position:absolute;left:50%;top:50%;max-width:none;margin:0;cursor:inherit;pointer-events:none;transform:translate(-50%,-50%)}
 
-/* page swipe hint (touch screens, first step page of a visit): a hand drags the page sideways and it springs back */
+/* B3: after the demo's click, the week 2 picture fades in over week 1 */
 .pic img.after,.pic.ready img.after{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
 .pic.swapped img.after{opacity:1}
 .pic.swapped .mark[data-n="2"]{animation:chg 1s .5s 2}
 @keyframes chg{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--amber) 50%,transparent)}}
+/* touch screens: round arrow while the page goes on below the screen */
 .sbar{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));z-index:5;width:48px;height:48px;margin-left:-24px;padding:0;
   display:grid;place-items:center;border-radius:50%;border:2px solid var(--amber);color:var(--ink);cursor:pointer;
   background:color-mix(in srgb,var(--surface) 70%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .2s,transform .2s,visibility 0s .2s}
 .sbar.show{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .2s}
 .sbar svg{width:16px;height:16px;transform:rotate(90deg)}
+/* SHARED:swipe-hint-css */
+/* the page swipe hint: a thumb that drags the page, with a caption (GUIDE-PRINCIPLES.md 6) */
 .phint .cn{fill:var(--brand-ink);opacity:.16}
 .phint{position:fixed;left:0;top:0;width:0;height:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .25s}
 .phint.on{opacity:1}
 .phint .phand{position:absolute;left:-22px;top:-6px;width:58px;height:64px;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 .phint .phand svg{width:100%;height:100%;display:block;overflow:visible;transition:transform .18s;transform-origin:38% 10%}
 .phint.press .phand svg{transform:scale(.85)}
+.phint .co{fill:var(--brand-ink)} .phint .cf{fill:var(--amber)} .phint .cl{fill:var(--brand-ink);opacity:.45}
 .phint .phcap{position:absolute;left:0;top:-54px;transform:translateX(-50%);white-space:nowrap;background:var(--brand);color:var(--brand-ink);
   border-radius:999px;padding:8px 14px 6px;font-family:var(--f-display);font-weight:800;font-size:calc(15px * var(--fs))}
+/* /SHARED:swipe-hint-css */
 
 /* new page slides in from the side it came from */
 #view.inR{animation:inR .22s ease-out}
@@ -300,6 +291,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
   .card.wide .rest{grid-column:2;grid-row:2}
 }
 
+/* SHARED:textsize-css */
 /* text size (shared by all guides): "Aa" opens a small panel: A− / four dots / A+. Sizes 90, 100 (default), 115, 130 %.
    Every text size on the page is calc(Npx * var(--fs)). The top bar, pictures, marks on pictures and hints keep --fs:1.
    Not remembered: each visit starts at 100 %. */
@@ -320,6 +312,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
 .tszd i{width:8px;height:8px;border-radius:50%;background:var(--line)}
 .tszd i.tsz-on{width:12px;height:12px;background:var(--amber)}
 .tszl{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* /SHARED:textsize-css */
 </style>
 </head>
 <body>
@@ -328,7 +321,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
     <div class="bar">
       <div class="where"><b>Xero Timesheet Guide</b><span id="count"></span></div>
       <button class="helpbtn" id="helpBtn" type="button" aria-label="Help: common problems"><span>Help</span></button>
-      <div class="tsz" id="tsz">
+      <!-- SHARED:textsize-html --><div class="tsz" id="tsz">
         <button class="tszbtn" type="button" aria-expanded="false" aria-controls="tszp" aria-label="Text size" title="Text size"><span aria-hidden="true">A<small>a</small></span></button>
         <div class="tszp" id="tszp" role="group" aria-label="Text size" hidden>
           <button class="dn" type="button" aria-label="Smaller text">A−</button>
@@ -336,7 +329,7 @@ ul.pts li.on{background:var(--amber-soft);box-shadow:0 0 0 6px var(--amber-soft)
           <button class="up" type="button" aria-label="Larger text">A+</button>
           <span class="tszl" aria-live="polite"></span>
         </div>
-      </div>
+      </div><!-- /SHARED:textsize-html -->
       <button class="theme" id="themeBtn" type="button"></button>
     </div>
     <div class="stripwrap">
@@ -361,9 +354,7 @@ const CFG = {
   hourRate: 'Manual: Casual 33.85',
   // Earnings rate for kilometres. No number in the name.
   kmRate: 'Manual: Less Than 5000km (No PAYGW)',
-  login: 'login.xero.com',
-  // Look of the picture placeholder: 'A' moving screen skeleton (chosen by the owner), 'B' window clip-art, 'C' step code and dots.
-  placeholder: 'A'
+  login: 'login.xero.com'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
 /* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2560,1536],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2560,1536],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2560,3102],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2752,1536],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2560,1536],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2560,1536],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2560,1536],"img/D3n.webp":[920,385]};/* SIZES:end */
@@ -380,7 +371,7 @@ const STAGES = [
 ];
 const FIRST_TIME = 0;   // index of the stage that returning people skip
 
-/* Each step: id, g (stage index), t (title), shot, pts. Optional: lead, box, todo.
+/* Each step: id, g (stage index), t (title), shot, pts. Optional: lead, anim, after.
    Write a lead only when it says something the title and points do not.
    shot.src + shot.marks  = the picture on wide screens (and the enlarged view when there is no fsrc).
    shot.nsrc + shot.nmarks = optional close-up for narrow screens (phones), cut from the same screenshot
@@ -527,12 +518,8 @@ const NARROW = matchMedia('(max-width: 899px)');
 const pick = (s, full) => (full && s.fsrc) ? {src:s.fsrc, marks:s.fmarks || [], ex:s.ex}
   : (!full && NARROW.matches && s.nsrc) ? {src:s.nsrc, marks:s.nmarks || [], close:true, ex:s.ex}
   : {src:s.src, marks:s.marks || [], ex:s.ex};
-function loadArt(code){
-  const k = CFG.placeholder;
-  if (k === 'A') return `<span class="ld-a"><i></i><i></i><i></i><i></i></span>`;
-  if (k === 'C') return `<span class="ld-c"><span class="ld-code">${code}</span><span class="dots"><i></i><i></i><i></i></span><span class="ld-cap">Loading picture</span></span>`;
-  return `<span class="ld-b"><svg viewBox="0 0 120 84" aria-hidden="true"><rect class="f" x="0" y="0" width="120" height="84" rx="9"/><rect class="w" x="5" y="15" width="110" height="64" rx="4"/><circle class="d" cx="11" cy="8" r="2.6"/><circle class="d" cx="19" cy="8" r="2.6"/><circle class="d" cx="27" cy="8" r="2.6"/><path class="h2" d="M5 79 L5 62 L38 40 L62 56 L72 50 L115 76 L115 79 Z"/><path class="h" d="M5 79 L36 54 L58 70 L80 52 L115 79 Z"/><circle class="s" cx="88" cy="32" r="8"/></svg><span class="ld-cap">Loading picture</span></span>`;
-}
+// the placeholder drawn in a picture's space until the picture has downloaded (GUIDE-PRINCIPLES.md 4.7)
+const loadArt = () => `<span class="ld-a"><i></i><i></i><i></i><i></i></span>`;
 function shotHTML(s, code, full){
   const v = pick(s, full), src = v.src;   // no src = placeholder only, with the description
   const sz = src && SIZES[src];
@@ -544,7 +531,7 @@ function shotHTML(s, code, full){
   const ms = v.marks;
   // Boxes sit on the screenshot. Numbers sit in a gutter beside it, level with their box,
   // so a number never covers the screenshot and a box line never crosses a number.
-  const boxes = ms.map(m => `<span class="mark${m.no?' no':''}" data-n="${m.n || m.g || ''}"${m.act ? ` data-act="${m.act}"` : ''}${m.tx != null ? ` data-tx="${m.tx}" data-ty="${m.ty}"` : ''} style="left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%"></span>`).join('');
+  const boxes = ms.map(m => `<span class="mark${m.no?' no':''}" data-n="${m.n || m.g || ''}"${m.act ? ` data-act="${m.act}"` : ''} style="left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%"></span>`).join('');
   const badges = ms.filter(m => m.n).map(m => `<b class="badge ${m.side==='r'?'r':'l'}${m.no?' no':''}" data-c="${(m.y + m.h/2).toFixed(2)}" style="top:clamp(0px, calc(${(m.y + m.h/2).toFixed(1)}% - 11px), calc(100% - 22px))">${m.n}</b>`).join('');
   return `<span class="pic${src ? '' : ' ready'}">${inner}${after}${boxes}${badges}</span>`;
 }
@@ -694,7 +681,7 @@ function startView(){
     <h1 tabindex="-1">Submit your hours and kilometres in Xero</h1>
     <p class="lead">About 5 minutes.</p>
     <ul class="keys">
-      <li><span class="n">1</span><div><b>Use a computer or iPad browser, not the Xero Me phone app.</b><span>The app's kilometre box only takes 0 to 24. A phone browser works, but the text is small.</span></div></li>
+      <li><span class="n">1</span><div><b>Use a web browser, not the Xero Me phone app.</b><span>The app's kilometre box only takes 0 to 24. Any browser works: computer, iPad or phone.</span></div></li>
       <li><span class="n">2</span><div><b>Have your numbers ready:</b><span>your hours and kilometres for each day you worked.</span></div></li>
       <li><span class="n">3</span><div><b>Submit by 11:59 pm Thursday of the week you worked.</b><span>Late? Your pay may come two weeks later. Worked Friday to Sunday? Submit as soon as you finish.</span></div></li>
     </ul>
@@ -716,11 +703,10 @@ function stepView(s){
     <div class="head">
       <span class="stage"><em>${s.id}</em>${esc(st.name)}</span>
       <h1 tabindex="-1">${esc(s.t)}</h1>
-      ${s.todo ? `<p class="box todo">${esc(s.todo)}</p>` : ''}
       ${s.lead ? `<p class="lead">${s.lead}</p>` : ''}
     </div>
     ${fig}
-    <div class="rest">${pts ? `<ul class="pts">${pts}</ul>` : ''}${s.box ? `<p class="box ${s.box.c}"><b>${esc(s.box.h)}</b>${s.box.b ? esc(s.box.b) : ''}</p>` : ''}</div>
+    <div class="rest">${pts ? `<ul class="pts">${pts}</ul>` : ''}</div>
   </section>${navHTML(s.id)}`;
 }
 
@@ -734,58 +720,85 @@ function helpView(){
   </section>${navHTML('help')}`;
 }
 
-/* ---------- demo pointer ---------- */
-const CUR = '<span class="g hand"><svg viewBox="0 0 44 54" aria-hidden="true"><g class="co"><rect x="6" y="0" width="16" height="34" rx="8"/><rect x="19" y="13" width="12" height="20" rx="6"/><rect x="26" y="15" width="12" height="20" rx="6"/><rect x="32" y="18" width="12" height="20" rx="6"/><rect x="6" y="22" width="38" height="32" rx="12"/><rect x="0" y="24" width="13" height="22" rx="6.5"/></g><g class="cf"><rect x="8" y="2" width="12" height="30" rx="6"/><rect x="21" y="15" width="8" height="16" rx="4"/><rect x="28" y="17" width="8" height="16" rx="4"/><rect x="34" y="20" width="8" height="16" rx="4"/><rect x="8" y="24" width="34" height="28" rx="10"/><rect x="2" y="26" width="9" height="18" rx="4.5"/></g><g class="cl"><rect x="20.2" y="18" width="1.6" height="13" rx=".8"/><rect x="27.2" y="20" width="1.6" height="12" rx=".8"/><rect x="33.2" y="23" width="1.6" height="11" rx=".8"/></g></svg></span>'
-  + '<span class="g eye"><svg viewBox="0 -1 44 32" aria-hidden="true"><path class="co" d="M0 15 C10 -1 34 -1 44 15 C34 31 10 31 0 15 Z"/><path class="cf" d="M2.5 15 C11 2.5 33 2.5 41.5 15 C33 27.5 11 27.5 2.5 15 Z"/><path class="co" d="M7 15 C13 7 31 7 37 15 C31 23 13 23 7 15 Z"/><circle class="cf" cx="22" cy="15" r="6.5"/><circle class="co" cx="24.3" cy="12.7" r="2"/></svg></span><i></i>';
+/* ---------- highlight: a numbered point and its box(es) on the picture, together ----------
+   lightUp(n) lights mark n (its boxes, its number and its text point) and fades the other boxes; lightUp(null) clears.
+   Play steps through 1, 2, 3 with time to read each. B3: after the box marked act:'click', the week 2 picture fades in.
+   Linked highlight: a mouse over a point or over its box on the picture, or a tap on a point (touch), lights the pair. */
 let demoT = [];
+const linkN = el => {                                  // the mark number an element stands for, or null
+  const v = $('#view'), t = el && el.closest && el.closest('ul.pts li.num');
+  return t && v && v.contains(t) ? t.dataset.n : null;
+};
+function lightUp(n){
+  const v = $('#view'); if (!v) return;
+  v.querySelectorAll('.pic .mark').forEach(m => { m.classList.toggle('demo-on', n !== null && m.dataset.n === n); m.classList.toggle('demo-dim', n !== null && m.dataset.n !== n); });
+  v.querySelectorAll('.pic .badge').forEach(b => { b.classList.toggle('demo-on', n !== null && b.textContent === n); b.classList.toggle('demo-dim', n !== null && b.textContent !== n); });
+  v.querySelectorAll('ul.pts li.num').forEach(li => li.classList.toggle('demo-on', n !== null && li.dataset.n === n));
+}
 function stopDemo(){
   demoT.forEach(clearTimeout); demoT = [];
-  const v = $('#view'); if (!v) return;                 // only this page's demo: other parts of the page use the same class names
-  v.querySelectorAll('.cur').forEach(h => h.remove());
-  v.querySelectorAll('.mark.on,.mark.dim,.badge.on,.badge.dim,.pts li.on').forEach(e => e.classList.remove('on','dim'));
-  v.querySelectorAll('.pic.swapped').forEach(p => p.classList.remove('swapped'));
+  lightUp(null); link.n = null; link.locked = false;
+  const v = $('#view'); if (v) v.querySelectorAll('.pic.swapped').forEach(p => p.classList.remove('swapped'));
 }
 function playDemo(){
   stopDemo();
-  const root = $('#view'), pic = root.querySelector('.pic');
+  const pic = $('#view .pic');
   if (!pic || !pic.clientHeight) return;
-  const marks = [...pic.querySelectorAll('.mark')], badges = [...pic.querySelectorAll('.badge')];
+  const marks = [...pic.querySelectorAll('.mark')];
   const ns = [...new Set(marks.map(m => m.dataset.n).filter(Boolean))].sort((a, b) => a - b);   // as numbers: 10 comes after 9
   if (!ns.length) return;
-  // eye: on the bottom edge of the box, so it does not cover what you check. hand: finger tip inside the box.
-  // eye: on the bottom edge of the box. edit: inside the box, left part. click: the middle of the box, which must be
-  // drawn tight around the button. A mark can name its own point with tx / ty (% of the picture).
-  const place = (bx, kind) => { const L = bx.offsetLeft, T = bx.offsetTop, W = bx.offsetWidth, H = bx.offsetHeight, P = bx.parentNode;
-    if (bx.dataset.tx) return [P.clientWidth * bx.dataset.tx / 100, P.clientHeight * bx.dataset.ty / 100];
-    return kind === 'look' ? [L + W / 2, T + H + 3] : kind === 'edit' ? [L + W * .3, T + H * .6] : [L + W / 2, T + H / 2]; };
-  const cur = document.createElement('span'); cur.className = 'cur'; cur.innerHTML = CUR;
-  cur.style.transition = 'opacity .3s';                 // first stop: fade in on mark 1, no travel
-  pic.appendChild(cur);
   const at = (ms, fn) => demoT.push(setTimeout(fn, ms));
-  let t = 250, stop = 0, swapped = false;
   const swap = !!pic.querySelector('img.after');      // B3: the click switches the picture to week 2
+  let t = 200, swapped = false;
   ns.forEach(n => {
-    const group = marks.filter(m => m.dataset.n === n);
-    group.forEach((bx, i) => {
-      const kind = bx.dataset.act || 'look', first = stop++ === 0;
-      at(t, () => {
-        marks.forEach(m => { m.classList.toggle('on', m.dataset.n === n); m.classList.toggle('dim', m.dataset.n !== n); });
-        badges.forEach(b => { b.classList.toggle('on', b.textContent === n); b.classList.toggle('dim', b.textContent !== n); });
-        root.querySelectorAll('.pts li').forEach(li => li.classList.toggle('on', li.dataset.n === n));
-        const [x, y] = place(bx, kind);
-        if (!first) cur.style.transition = '';          // later stops: glide from the last one
-        cur.className = 'cur k-' + kind; cur.style.transform = `translate(${x}px,${y}px)`; cur.style.opacity = 1;
-      });
-      t += first ? 450 : 950;                           // fade-in or travel time
-      if (kind === 'click') {                           // two taps
-        [0, 700].forEach(d => { at(t + d, () => cur.classList.add('press')); at(t + d + 450, () => cur.classList.remove('press')); });
-        t += 1600;
-        if (swap && !swapped) { swapped = true; at(t - 450, () => pic.classList.add('swapped')); t += 700; }   // the page changes after the click
-      } else t += i < group.length - 1 ? 900 : 1700;    // time to read the point
-    });
+    at(t, () => lightUp(n));
+    t += 1900;                                        // time to read the point and find its box
+    if (swap && !swapped && marks.some(m => m.dataset.n === n && m.dataset.act === 'click')) {
+      swapped = true; at(t, () => pic.classList.add('swapped')); t += 1600;   // the page changes after the click
+    }
   });
   at(t, stopDemo);
 }
+/* Linked highlight. Mouse: over a point, or over a box / number on the picture (they let clicks through to the picture,
+   so they are found by position). A tap or click on a point lights its box and keeps it lit until the next tap or click;
+   if that box is off the screen and fits on it together with the point, the page scrolls just enough. Any of these stops Play. */
+const link = {n: null, locked: false, input: ''};
+function markAt(x, y){                                 // the mark number under the mouse on the picture, or null
+  const pic = $('#view .pic'); if (!pic) return null;
+  for (const el of pic.querySelectorAll('.mark, .badge')) {
+    const r = el.getBoundingClientRect();
+    if (x >= r.left - 4 && x <= r.right + 4 && y >= r.top - 4 && y <= r.bottom + 4) return el.classList.contains('badge') ? el.textContent : el.dataset.n;
+  }
+  return null;
+}
+function setLink(n){
+  if (n === link.n) return;
+  if (n !== null) stopTapHint();                       // the reader takes over from the hint
+  if (n !== null && demoT.length) stopDemo();          // and from Play
+  link.n = n; lightUp(n);
+}
+document.addEventListener('pointerdown', e => { link.input = e.pointerType; }, true);
+document.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse' || link.locked || !$('#zoom').hidden) return;
+  const onPic = e.target.closest && e.target.closest('#view .shot');
+  setLink(linkN(e.target) || (onPic ? markAt(e.clientX, e.clientY) : null));
+}, {passive: true});
+document.addEventListener('click', e => {
+  const n = linkN(e.target);
+  if (n !== null) tapHintDone = true;                  // the reader found it: no hint needed
+  if (n === null) { if (link.locked) { link.locked = false; setLink(null); } return; }
+  if (link.locked && link.n === n) { link.locked = false; setLink(null); return; }   // the same point again: off
+  link.locked = false; setLink(n); link.locked = true;
+  // Show the box too, but only if the box and the tapped point both fit on the screen: the reader must not lose the
+  // point they just tapped. If they do not fit, nothing moves; the box is lit when the reader scrolls up to it.
+  const box = $('#view .pic .mark.demo-on'), li = e.target.closest('li'), hb = document.querySelector('header').getBoundingClientRect().bottom;
+  if (box && li) { const r = box.getBoundingClientRect(), l = li.getBoundingClientRect();
+    const top = Math.min(r.top, l.top), bottom = Math.max(r.bottom, l.bottom);
+    if (bottom - top <= innerHeight - hb - 24) {
+      if (top < hb + 8) window.scrollBy({top: top - hb - 12, behavior: 'smooth'});
+      else if (bottom > innerHeight - 8) window.scrollBy({top: bottom - innerHeight + 12, behavior: 'smooth'});
+    } }
+});
 /* Runs fn once the step's picture is downloaded, decoded and has a size on the page.
    Nothing happens before that: the demo needs the picture to know where the marks are. */
 function whenPicReady(pic, fn){
@@ -799,15 +812,58 @@ function whenPicReady(pic, fn){
   const start = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(check);
   if (img.complete && img.naturalWidth > 0) start(); else img.addEventListener('load', start, {once:true});
 }
-/* Play stays switched off until the picture is ready. auto = also start the demo by itself (first visit to the step).
-   The demo also plays when the device asks for reduced motion: the pointer only moves a short way inside the picture. */
-function autoPlay(){ if (phT || phRaf) { demoT.push(setTimeout(autoPlay, 300)); return; } playDemo(); }   // after the page hint
-function armDemo(auto){
-  const pic = $('#view .pic'), btn = $('#view [data-play]');
-  whenPicReady(pic, () => {
-    if (btn) btn.disabled = false;
-    if (auto) demoT.push(setTimeout(autoPlay, 400));
+/* ---------- tap hint (touch screens only): once per visit, on the first step whose numbered point 1 is on the screen ----------
+   A dot appears in the middle of point 1, taps it twice (1 s apart, so it does not look like a double tap), and point 1
+   and its box light up; then all of it goes away (about 3.5 s). Computers get no hint: a mouse over a point already
+   lights it up.
+   It waits for the picture, for point 1 to be on the screen (below the top bar), and for the other hints to finish
+   (GUIDE-PRINCIPLES.md 6: never two at once). Any touch, click or key stops it. If it is stopped before the first tap,
+   or the step has no numbered points, it tries again later; once it has tapped, or the reader has tapped a point
+   themselves, it never comes back in this visit. */
+let tapHintDone = false, tapT = [], tapIO = null, tapOn = false;
+function stopTapHint(){
+  tapT.forEach(clearTimeout); tapT = [];
+  if (tapIO) { tapIO.disconnect(); tapIO = null; }
+  document.querySelectorAll('.taphint').forEach(d => d.remove());
+  if (tapOn) { tapOn = false; if (link.n === null) lightUp(null); }
+}
+function tapHint(){
+  stopTapHint();
+  if (tapHintDone || !TOUCH) return;
+  const li = $('#view ul.pts li.num'); if (!li) return;
+  const run = () => {
+    if (!li.isConnected || tapHintDone) return;
+    if (phT || phRaf || performance.now() < stripHintEnd || !$('#zoom').hidden || demoT.length || link.n !== null) {
+      tapT.push(setTimeout(run, 300)); return;         // another hint, the viewer, Play or a highlight is on: wait
+    }
+    const n = li.dataset.n, dot = document.createElement('span');
+    dot.className = 'taphint'; dot.setAttribute('aria-hidden', 'true'); li.appendChild(dot); tapOn = true;
+    const at = (ms, fn) => tapT.push(setTimeout(fn, ms));
+    const press = () => { dot.classList.remove('press'); void dot.offsetWidth; dot.classList.add('press'); };
+    at(50, () => dot.classList.add('show'));
+    at(550, () => { tapHintDone = true; press(); lightUp(n); });
+    at(1550, press);                                   // 1 s after the first tap: two taps, not a double tap
+    at(3100, () => { dot.classList.remove('show'); lightUp(null); });
+    at(3400, () => { dot.remove(); tapOn = false; });
+  };
+  whenPicReady($('#view .pic'), () => {
+    if (!li.isConnected || tapHintDone) return;
+    const hb = Math.ceil(document.querySelector('header').getBoundingClientRect().bottom);
+    tapIO = new IntersectionObserver(es => {
+      if (!es.some(e => e.isIntersecting)) return;
+      tapIO.disconnect(); tapIO = null; tapT.push(setTimeout(run, 500));
+    }, {rootMargin: `-${hb}px 0px 0px 0px`, threshold: 1});
+    tapIO.observe(li);
   });
+}
+// any touch, click or key stops it; if it had not tapped yet, it waits to try again
+document.addEventListener('pointerdown', () => { if (tapT.length || tapIO) { stopTapHint(); if (!tapHintDone) tapT.push(setTimeout(tapHint, 1500)); } }, true);
+document.addEventListener('keydown', () => { if (tapT.length || tapIO) { stopTapHint(); if (!tapHintDone) tapT.push(setTimeout(tapHint, 1500)); } }, true);
+
+/* Play stays switched off until the picture is ready (the highlight needs the boxes in place). It plays only when tapped. */
+function armDemo(){
+  const pic = $('#view .pic'), btn = $('#view [data-play]');
+  whenPicReady(pic, () => { if (btn) btn.disabled = false; });
 }
 
 /* ---------- page swipe hint: touch screens only, the first step page opened in a visit.
@@ -815,8 +871,12 @@ function armDemo(auto){
    It waits for the strip hint to finish, the pointer demo waits for it, and any touch stops it. ---------- */
 const TOUCH = matchMedia('(pointer: coarse)').matches;
 let pageHintDone = false, phT = 0, phRaf = 0, stripHintEnd = 0;
+/* SHARED:swipe-hand */
+// the thumb of the page swipe hint (GUIDE-PRINCIPLES.md 6)
+const SWIPE_HAND = '<span class="phand"><svg viewBox="-22 -4 58 64"><g transform="rotate(-16 16 58)"><path class="co" d="M16 0 C25 0 30 7 30 16 L30.5 32 C31 38 30 46 29 60 L5 60 C3.5 46 2 38 2.4 32 L2 16 C2 7 7 0 16 0Z"/><path class="cf" d="M16 2.2 C23.6 2.2 27.8 8 27.8 16 L28.3 32 C28.7 38 27.8 46 26.8 60 L7.2 60 C6 46 4.4 38 4.6 32 L4.2 16 C4.2 8 8.4 2.2 16 2.2Z"/><path class="cn" d="M16 5.5 C21.5 5.5 23.6 9 23.6 13.5 L23.4 19 C23.3 21 21.6 22.2 19.6 22.2 L12.4 22.2 C10.4 22.2 8.7 21 8.6 19 L8.4 13.5 C8.4 9 10.5 5.5 16 5.5Z"/><path class="cl" d="M9 34.2 Q16 31.6 23.6 34.2 L23.6 35.8 Q16 33.4 9 35.8Z"/></g></svg></span>';
+/* /SHARED:swipe-hand */
 const PH = document.createElement('div'); PH.className = 'phint'; PH.setAttribute('aria-hidden', 'true');
-PH.innerHTML = '<span class="phcap">Swipe to change step</span><span class="phand"><svg viewBox="-22 -4 58 64"><g transform="rotate(-16 16 58)"><path class="co" d="M16 0 C25 0 30 7 30 16 L30.5 32 C31 38 30 46 29 60 L5 60 C3.5 46 2 38 2.4 32 L2 16 C2 7 7 0 16 0Z"/><path class="cf" d="M16 2.2 C23.6 2.2 27.8 8 27.8 16 L28.3 32 C28.7 38 27.8 46 26.8 60 L7.2 60 C6 46 4.4 38 4.6 32 L4.2 16 C4.2 8 8.4 2.2 16 2.2Z"/><path class="cn" d="M16 5.5 C21.5 5.5 23.6 9 23.6 13.5 L23.4 19 C23.3 21 21.6 22.2 19.6 22.2 L12.4 22.2 C10.4 22.2 8.7 21 8.6 19 L8.4 13.5 C8.4 9 10.5 5.5 16 5.5Z"/><path class="cl" d="M9 34.2 Q16 31.6 23.6 34.2 L23.6 35.8 Q16 33.4 9 35.8Z"/></g></svg></span>';
+PH.innerHTML = '<span class="phcap">Swipe to change step</span>' + SWIPE_HAND;
 document.body.appendChild(PH);
 function stopPageHint(){
   clearTimeout(phT); cancelAnimationFrame(phRaf); phT = phRaf = 0;
@@ -885,7 +945,7 @@ function render(id, quiet, keep){   // keep = stay at the same scroll height (af
   // Opening a stage A step means the person needs it: stop skipping.
   if (skipA && A_IDS.includes(id)) setSkip(false);
   stopDemo();
-  const was = current, fresh = !seen.has(id);
+  const was = current;
   current = id; seen.add(id);
   const s = STEPS.find(x => x.id === id);
   $('#view').classList.remove('inR','inL');
@@ -902,7 +962,8 @@ function render(id, quiet, keep){   // keep = stay at the same scroll height (af
   stopPageHint();
   if ((s || id === 'start') && TOUCH && !pageHintDone) pageHint();   // before the demo, which waits for it
   requestAnimationFrame(syncStartBar);
-  if (s && s.anim) armDemo(fresh);           // Play switches on when the picture is ready; plays by itself on the first visit only
+  if (s && s.anim) armDemo();                // Play switches on when the picture is ready
+  tapHint();                                 // once per visit (it does nothing on pages without numbered points)
   if (!keep) window.scrollTo(0,0);   // Next / Previous / strip: start at the top of the new page
   const h = $('#view h1'); if (h) h.focus({preventScroll:true});
   // Browser history: each page change adds an entry, so the phone's Back button goes to the page before.
@@ -1101,22 +1162,35 @@ document.addEventListener('keydown', e => {
   if (to) { e.preventDefault(); go(to); }
 });
 
-/* ---------- theme (icon shows the mode you switch to) ---------- */
-const moon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></svg>';
-const sun = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></g></svg>';
-const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-function paintTheme(){ const d = isDark(); $('#themeBtn').innerHTML = d ? sun : moon; $('#themeBtn').setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode'); }
-$('#themeBtn').addEventListener('click', () => { document.documentElement.dataset.theme = isDark() ? 'light' : 'dark'; paintTheme(); });
-onMedia(matchMedia('(prefers-color-scheme: dark)'), paintTheme);
+/* SHARED:theme */
+/* ---------- day / night switch (GUIDE-PRINCIPLES.md 4.4): follows the device until the reader taps the button.
+   The icon shows the mode it switches to. Not remembered. ---------- */
+(() => {
+  const root = document.documentElement, btn = document.getElementById('themeBtn');
+  const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+  const SUN = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.6" fill="currentColor"/>${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<line x1="${12 + 7.6 * Math.cos(a * Math.PI / 180)}" y1="${12 + 7.6 * Math.sin(a * Math.PI / 180)}" x2="${12 + 10.2 * Math.cos(a * Math.PI / 180)}" y2="${12 + 10.2 * Math.sin(a * Math.PI / 180)}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`).join('')}</svg>`;
+  const MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5 A8.5 8.5 0 1 1 9.5 4 A6.8 6.8 0 0 0 20 14.5 Z" fill="currentColor"/></svg>';
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : !!(mq && mq.matches);
+  const paint = () => {
+    const d = isDark(), label = d ? 'Switch to light mode' : 'Switch to dark mode';
+    btn.innerHTML = d ? SUN : MOON; btn.setAttribute('aria-label', label); btn.title = label;
+  };
+  btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; paint(); });
+  if (mq) mq.addEventListener ? mq.addEventListener('change', paint) : mq.addListener && mq.addListener(paint);   // older Safari: addListener
+  new MutationObserver(paint).observe(root, {attributes: true, attributeFilter: ['data-theme']});
+  paint();
+})();
+/* /SHARED:theme */
 
 // crossing the phone / wide boundary (rotate, resize): draw the current step again with the other picture
 onMedia(NARROW, () => { if (current && $('#zoom').hidden) { const y = window.scrollY; render(current, true, true); window.scrollTo(0, y); } });   // keep the reading height
 
-buildStrip(); paintTheme();
+buildStrip();
 render(location.hash.slice(1) || 'start');
 syncArrows(); hintStrip();
 })();
 
+/* SHARED:textsize-js */
 /* ---------- text size (shared by all guides): "Aa" opens A− / four dots / A+.
    The whole page text scales by --fs; the line the reader is on stays where it is on screen.
    Not remembered (no browser storage): each visit starts at 100 %. ---------- */
@@ -1154,6 +1228,7 @@ syncArrows(); hintStrip();
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { open(false); btn.focus({preventScroll: true}); } });
   setSize(1, false);
 })();
+/* /SHARED:textsize-js */
 </script>
 </body>
 </html>
