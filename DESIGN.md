@@ -159,6 +159,10 @@ boxes fade. This is how the reader learns which box a point means. **There is no
 
 ## 6. How the page is built
 
+Tab icon: a week page with a small clock (navy square, cream page, amber top), chosen by the owner from four
+options on 26 Nov 2026. It is an inline SVG in `<link rel="icon">` (GUIDE-PRINCIPLES.md 7). It does not use Xero's
+blue or Xero's logo, so the guide never looks like an official Xero page.
+
 All content is data near the top of the script in `index.html`:
 
 | Name | What it holds |
@@ -269,3 +273,4 @@ Not decided. Do not "fix" them by guessing.
 | 20 Nov 2026 | Tap hint on touch screens only; the dot taps the middle of the point's text, two taps 1 s apart | Owner: on computers hover already shows it; the whole point is tappable, not only the number; closer taps looked like a double tap. |
 | 20 Nov 2026 | Start page: "Use a web browser, not the Xero Me phone app"; any browser works, phone included (was "computer or iPad browser") | Owner: only the app must be avoided; the old title read as if a phone browser were wrong. |
 | 26 Nov 2026 | A1: real invite email from the manager (Accept Invite, 14 days), first name covered; "Example" label removed; the email's Step 2 (download the Xero Me app, its pictures broken in the email) is not shown; A1 says to log in in a web browser instead, because the app cannot take kilometres (wording changed the same day: "skip Step 2" read as ignoring the email) | Owner: the stand-in showed an older email. The app cannot take kilometres, so the guide sends readers to the web page. |
+| 26 Nov 2026 | Tab icon: week page and clock (option X3 of four) | Owner's choice. In the guide colours, not Xero's, so it never looks like Xero's own page. |
