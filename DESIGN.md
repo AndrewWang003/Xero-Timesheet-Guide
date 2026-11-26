@@ -197,7 +197,9 @@ python3 tools/apply_marks.py
   positions. Never type mark coordinates by hand for the steps it builds.
 - `apply_marks.py` writes the mark positions and the size of every picture in `img/` into `index.html`.
   Run it after any picture is added or replaced, also the ones kept by hand.
-- Not built by the script: A1 and A2 (examples, labelled "Example"). The owner will replace them with real screenshots.
+- Not built by the script: A1 (the real invite email, 1032 × 475, the first name covered on the original before saving;
+  phone close-up `A1n.webp` = the title, then Accept Invite) and A2
+  (an example, labelled "Example"). For both, compute the mark from a pixel box in the picture, not by eye.
 
 ## 8. Common changes
 
@@ -216,7 +218,7 @@ Not decided. Do not "fix" them by guessing.
    Sunday to submit as soon as they finish. Timesheets are per fortnight. The owner will confirm with the manager.
 2. **A2** says "use the same name as on your new employee form". Not confirmed that this form is still used.
 3. **B1** assumes a new worker lands on the Xero Me page right after logging in. Not checked with a new account.
-4. **A1 and A2** pictures are stand-ins.
+4. **A2** picture is a stand-in (A1 is real since 26 Nov 2026).
 
 ## 10. Decisions
 
@@ -266,3 +268,4 @@ Not decided. Do not "fix" them by guessing.
 | 20 Nov 2026 | Tap hint: once per visit, a see-through dot taps point 1 twice and its box lights up; a mouse click on a point now locks the highlight, like a tap | Owner: readers did not find the linked highlight. The hint shows a click on computers too, so a click must work there. |
 | 20 Nov 2026 | Tap hint on touch screens only; the dot taps the middle of the point's text, two taps 1 s apart | Owner: on computers hover already shows it; the whole point is tappable, not only the number; closer taps looked like a double tap. |
 | 20 Nov 2026 | Start page: "Use a web browser, not the Xero Me phone app"; any browser works, phone included (was "computer or iPad browser") | Owner: only the app must be avoided; the old title read as if a phone browser were wrong. |
+| 26 Nov 2026 | A1: real invite email from the manager (Accept Invite, 14 days), first name covered; "Example" label removed; the email's Step 2 (download the Xero Me app, its pictures broken in the email) is not shown, A1 says to skip it and use a web browser | Owner: the stand-in showed an older email. The app cannot take kilometres, so the guide sends readers to the web page. |

@@ -357,7 +357,7 @@ const CFG = {
   login: 'login.xero.com'
 };
 /* Size in pixels of every picture, so its space is kept before it downloads. Written by tools/apply_marks.py. */
-/* SIZES:start */const SIZES = {"img/A1.jpg":[1376,991],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2560,1536],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2560,1536],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2560,3102],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2752,1536],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2560,1536],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2560,1536],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2560,1536],"img/D3n.webp":[920,385]};/* SIZES:end */
+/* SIZES:start */const SIZES = {"img/A1.jpg":[1032,475],"img/A1n.webp":[920,398],"img/A2.jpg":[1266,1106],"img/B1.jpg":[1600,755],"img/B1f.webp":[2560,1536],"img/B1n.webp":[920,757],"img/B2.jpg":[948,557],"img/B2f.webp":[2560,1536],"img/B3-2.jpg":[1600,396],"img/B3.jpg":[1600,396],"img/B3f.webp":[2560,3102],"img/B3n-2.webp":[920,400],"img/B3n.webp":[920,400],"img/C1.jpg":[1600,695],"img/C1f.webp":[2752,1536],"img/C1n.webp":[920,1030],"img/C2.jpg":[1600,768],"img/C2f.webp":[2560,1536],"img/C2n.webp":[920,1005],"img/D1.jpg":[832,860],"img/D1f.webp":[2560,1536],"img/D2.webp":[1240,390],"img/D2f.webp":[1567,1080],"img/D2n.webp":[920,509],"img/D3.jpg":[1140,630],"img/D3f.webp":[2560,1536],"img/D3n.webp":[920,385]};/* SIZES:end */
 const rate = t => `<span class="rate">${t}</span>`;
 const AR = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2 L10 7 L5 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const AL = '<svg class="ar" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 L4 7 L9 12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -387,11 +387,13 @@ const FIRST_TIME = 0;   // index of the stage that returning people skip
         {no:1, h:'...'} = coral "do not" bullet. */
 const STEPS = [
   {id:'A1', g:0, t:'Open the invite email', anim:true,
-    shot:{src:'img/A1.jpg', ex:'Example', what:'Invite email from Xero with the Set up my employee file button', marks:[{x:29.6,y:79.4,w:42.8,h:12.2,n:1,act:"click"}]},
+    shot:{src:'img/A1.jpg', what:'Invite email from Xero with the Accept Invite button', marks:[{x:44.4,y:74.5,w:12.7,h:11.4,n:1,act:"click"}],
+      nsrc:'img/A1n.webp', nmarks:[{x:29.7,y:27.2,w:39.7,h:37.8,n:1,act:"click"}]},
     pts:[
-      '<b>Find the email</b> from Xero: "Welcome to Matrix Traffic and Transport Data". Check junk or spam too.',
-      {n:1, h:'<b>Click Set up my employee file.</b>'},
-      '<b>No email, or the date has passed?</b> Ask your supervisor for a new invite.'
+      '<b>Find the email</b> from Xero: "Matrix Traffic and Transport Data P/L has invited you to Xero Me". Check junk or spam too.',
+      {n:1, h:'<b>Click Accept Invite.</b>'},
+      '<b>Skip Step 2</b> in the email (the Xero Me app). Use Xero in a web browser.',
+      '<b>No email, or more than 14 days old?</b> Ask your supervisor for a new invite.'
     ]},
   {id:'A2', g:0, t:'Set up your account', anim:true,
     shot:{src:'img/A2.jpg', ex:'Example', what:'Create account form for people new to Xero', marks:[{x:3.3,y:9.7,w:54.6,h:22.6,n:1,act:"edit"},{x:3.3,y:45.5,w:54.6,h:22.1,n:2,act:"edit"},{x:3.6,y:79.3,w:3.9,h:4.6,n:3,act:"click"},{x:3.8,y:88.6,w:13.9,h:7.0,g:3,act:"click"}]},
